@@ -240,19 +240,24 @@ function ModificarProducto() {
             />
             <br />
             <TextField
+              fullWidth
               label="Comentarios"
               value={comentarios}
               onChange={handleComentariosChange}
               variant="outlined"
               margin="dense"
+              rows={4}
+              multiline
             />
             <br />
             <TextField
+              fullWidth
               label="Usuario"
               value={usuario}
               onChange={handleUsuarioChange}
               variant="outlined"
-              margin="dense"
+              margin="dense"              
+              disabled
             />
             <br />
           </form>

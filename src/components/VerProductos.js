@@ -52,10 +52,11 @@ function VerProductos() {
     fetch('https://vivosis.vercel.app/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
-        const productosConId = data.map(producto => ({
+        const productosConId = data.map(producto => ({          
           id: producto._id,
           ...producto
         }));
+        console.log("Productos obtenidos", productosConId)
         setProductos(productosConId);
         setLoading(false);
       })
@@ -107,11 +108,12 @@ function VerProductos() {
 
   const columns = [
     { field: 'nombre', headerName: 'Nombre', flex: 1 },
-    { field: 'categoria', headerName: 'Categoría', flex: 1 },
+    { field: 'categoria', headerName: 'Categoría', flex: 0.8 },
     { field: 'subcategoria', headerName: 'Subcategoría', flex: 1 },
-    { field: 'precio', headerName: 'Precio', flex: 1 },
-    { field: 'costo', headerName: 'Costo', flex: 1 },
-    { field: 'stock', headerName: 'Stock', flex: 1 },
+    { field: 'precio', headerName: 'Precio', flex: 0.5 },
+    { field: 'costo', headerName: 'Costo', flex: 0.5 },
+    { field: 'stock', headerName: 'Stock', flex: 0.5 },
+    { field: 'fecha_costo', headerName: 'Fecha costo', flex: 0.7 },
     { field: 'comentarios', headerName: 'Comentarios', flex: 1 },
     { field: 'usuario', headerName: 'Usuario', flex: 1 },
     {
@@ -122,13 +124,13 @@ function VerProductos() {
         <>
           <IconButton
             aria-label="Editar"
-            onClick={() => handleEdit(params.row._id)}
+            onClick={() => handleEdit(params.row.id)}
           >
             <EditIcon />
           </IconButton>
           <IconButton
             aria-label="Eliminar"
-            onClick={() => handleDelete(params.row._id)}
+            onClick={() => handleDelete(params.row.id)}
           >
             <DeleteIcon />
           </IconButton>
@@ -174,7 +176,7 @@ function VerProductos() {
           <DataGrid
             rows={filteredProductos}
             columns={columns}
-            components={{ Toolbar: GridToolbar }}
+            components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick density='compact'
           />
 
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>

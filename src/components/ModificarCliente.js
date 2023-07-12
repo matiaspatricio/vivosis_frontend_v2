@@ -13,6 +13,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+
+
 
 function ModificarCliente() {
   const navigate = useNavigate();
@@ -27,14 +33,37 @@ function ModificarCliente() {
   const [usuario, setUsuario] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
-  const [guardarHabilitado, setGuardarHabilitado] = useState(true);
+  const [guardarHabilitado, setGuardarHabilitado] = useState(true);  
+  const [openDialog, setOpenDialog] = useState(false);
+  const [localidadDialog, setLocalidadDialog] = useState('');
+  const [localidadesDialog, setLocalidadesDialog] = useState([]);
+  
+  
+  
+
+  
+  const listaLocalidades = [
+    { value: 'AVELLANEDA', label: 'AVELLANEDA' },
+    { value: 'BERAZATEGUI', label: 'BERAZATEGUI' },
+    { value: 'CRUCE VARELA', label: 'CRUCE VARELA' },
+    { value: 'ENVIO CORREO', label: 'ENVIO CORREO' },
+    { value: 'ENVIO MENSAJERIA', label: 'ENVIO MENSAJERIA' },
+    { value: 'EZPELETA', label: 'EZPELETA' },
+    { value: 'LANUS', label: 'LANUS' },
+    { value: 'LOMAS', label: 'LOMAS' },
+    { value: 'QUILMES', label: 'QUILMES' },
+    { value: 'RETIRO EN DOMICILIO', label: 'RETIRO EN DOMICILIO' },
+    { value: 'SOLANO', label: 'SOLANO' },
+    { value: 'VARELA', label: 'VARELA' }
+  ];
+
 
   useEffect(() => {
     fetch(`https://vivosis.vercel.app/api/cliente/${id}`)
       .then(response => response.json())
       .then(data => {
         setCliente(data);
-        console.log(data.data.nombre)
+        console.log(data.nombre)
       })
       .catch(error => {
         console.log('Error al cargar el cliente:', error);
@@ -48,7 +77,21 @@ function ModificarCliente() {
     setLocalidad(cliente.localidad || '');
     setEstado(cliente.estado || '');
     setUsuario(cliente.usuario || '');
+    setLocalidadesDialog(listaLocalidades);
   }, [cliente]);
+
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleLocalidadDialogChange = event => {
+    const selectedCategoria = event.target.value;
+    setLocalidadDialog(selectedCategoria);    
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   const handleNombreChange = event => {
     setNombre(event.target.value);
@@ -56,6 +99,24 @@ function ModificarCliente() {
 
   const handleTelefonoChange = event => {
     setTelefono(event.target.value);
+  };
+  const handleCloseDialogCancel = () => {
+    setOpenDialog(false);
+  };
+  
+  const handleCloseDialogSave = () => {
+    setOpenDialog(false);
+    setLocalidad(localidadDialog);
+/*    const selectedLocalidadObj = localidadesDialog.find(c => c._id === localidadDialog);
+    if (selectedLocalidadObj) {      
+      setLocalidad(selectedLocalidadObj.nombre);
+      
+      
+    }
+    */
+    
+    
+    
   };
 
   const handleDireccionChange = event => {
@@ -146,12 +207,14 @@ function ModificarCliente() {
               margin="dense"
             />
             <br />
+            
             <TextField
               label="Localidad"
               value={localidad}
               onChange={handleLocalidadChange}
               variant="outlined"
               margin="dense"
+              onClick={handleOpenDialog}
             />
             <br />
             <FormControl variant="outlined" margin="dense" fullWidth>
@@ -163,8 +226,8 @@ function ModificarCliente() {
                 onChange={handleEstadoChange}
                 label="Estado"
               >
-                <MenuItem value="Activo">Activo</MenuItem>
-                <MenuItem value="Bloqueado">Bloqueado</MenuItem>
+                <MenuItem value="ACTIVO">ACTIVO</MenuItem>
+                <MenuItem value="BLOQUEADO">BLOQUEADO</MenuItem>
               </Select>
             </FormControl>
             <br />
@@ -174,6 +237,7 @@ function ModificarCliente() {
               onChange={handleUsuarioChange}
               variant="outlined"
               margin="dense"
+              disabled
             />
             <br />
           </form>
@@ -191,7 +255,35 @@ function ModificarCliente() {
           </Box>
         </CardActions>
       </Card>
-
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Seleccionar localidad</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            select
+            label="Localidad"
+            value={localidadDialog}
+            onChange={handleLocalidadDialogChange}
+            variant="outlined"
+            margin="dense"
+          >
+            {localidadesDialog.map(localidad => (
+              <MenuItem key={localidad.value} value={localidad.value}>
+                {localidad.label}
+              </MenuItem>
+            ))}
+          </TextField>                    
+          <br />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialogCancel} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleCloseDialogSave} color="primary">
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         open={mostrarMensaje}
         autoHideDuration={3000}

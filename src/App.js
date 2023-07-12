@@ -145,7 +145,7 @@ function App() {
             <ListItemIcon>
               <AssignmentIcon />
             </ListItemIcon>
-            <ListItemText primary="ENVIOS WHATSAPP" />
+            <ListItemText primary="ENVIOS TOTALES WHATSAPP" />
           </ListItem>
           {/* Agrega más elementos de menú aquí */}
         </List>
@@ -153,8 +153,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/verclientes" element={<VerClientes />} />
-        <Route path="/Verproductos" element={<VerProductos />} />
-        <Route path="/Veringresos" element={<VerIngresos />} />
+        <Route path="/verproductos" element={<VerProductos />} />
+        <Route path="/veringresos" element={<VerIngresos />} />
         <Route path="/verpedidos" element={<VerPedidos />} />
         <Route path="/modificarcliente/:id" element={<ModificarCliente />} />
         <Route path="/modificarproducto/:id" element={<ModificarProducto />} />

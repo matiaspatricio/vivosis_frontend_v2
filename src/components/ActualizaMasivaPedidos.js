@@ -168,7 +168,7 @@ function ActualizaMasivaPedidos() {
       <Card sx={{ display: 'flex' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography variant="h5" component='h4' gutterBottom sx={{ textAlign: 'center', mt: 3, mb: 3 }}>Actualizar todos los pedidos de clientes</Typography>
+          <Typography variant="h5" component='h4' gutterBottom sx={{ textAlign: 'center', mt: 3, mb: 3 }}>Actualizar todos los pedidos (pendientes) de clientes</Typography>
           <Box display="flex" justifyContent="center" alignItems="center" >
             <Box width={800}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>

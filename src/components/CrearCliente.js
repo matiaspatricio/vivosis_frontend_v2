@@ -30,7 +30,7 @@ function CrearCliente() {
   const [telefono, setTelefono] = useState('');
   const [direccion, setDireccion] = useState('');
   const [localidad, setLocalidad] = useState('');
-  const [estado, setEstado] = useState('Activo');
+  const [estado, setEstado] = useState('ACTIVO');
   const [usuario, setUsuario] = useState('admin');
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);

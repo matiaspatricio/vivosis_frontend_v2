@@ -150,9 +150,7 @@ function VerClientes() {
           <Button variant="contained" color="primary" onClick={handleCrearCliente}>
             Crear Cliente
           </Button>
-        </Box>
-
-          
+        </Box>          
           <br/><br/><br/>
           <TextField
             label="Buscar"
@@ -167,7 +165,7 @@ function VerClientes() {
               ),
             }}
           />
-          <DataGrid rows={filteredClientes} columns={columns} components={{ Toolbar: GridToolbar }} />
+          <DataGrid rows={filteredClientes} columns={columns} components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick density='compact' />
 
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
             <DialogTitle>Confirmar eliminación</DialogTitle>

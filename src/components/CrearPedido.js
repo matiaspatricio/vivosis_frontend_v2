@@ -31,13 +31,14 @@ function CrearPedido() {
   const [estadoPago, setEstadoPago] = useState('PENDIENTE');
   const [fechaEntrega, setFechaEntrega] = useState(null);
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('Admin');
+  const [usuario, setUsuario] = useState('ADMIN');
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
-  const [localidad, setLocalidad] = useState('');
+  const [valorLocalidad, setValorLocalidad] = useState('');
 
   const listaLocalidades = [
+    { value: '', label: 'VACIO' },
     { value: 'AVELLANEDA', label: 'AVELLANEDA' },
     { value: 'BERAZATEGUI', label: 'BERAZATEGUI' },
     { value: 'CRUCE VARELA', label: 'CRUCE VARELA' },
@@ -160,7 +161,7 @@ function CrearPedido() {
   };
 
   const handleLocalidadChange = (event, value) => {
-    setLocalidad(value.value);
+    setValorLocalidad(value ? value.value : ''); // Guardar el valor seleccionado en valorLocalidad
   };
 
   const limpiarFormulario = () => {
@@ -177,7 +178,7 @@ function CrearPedido() {
     setFechaEntrega(null);
     setComentarios('');
     setUsuario('');
-    setLocalidad('');
+    setValorLocalidad('');
   };
 
   const actualizarStockProducto = (productId, quantity) => {
@@ -196,7 +197,7 @@ function CrearPedido() {
           body: JSON.stringify(producto)
         })
           .then(response => response.json())
-         .then(data => {
+          .then(data => {
             console.log('Stock del producto actualizado:', data);
           })
           .catch(error => {
@@ -232,7 +233,7 @@ function CrearPedido() {
       fecha_entrega: fechaEntrega ? fechaEntrega.format('DD/MM/YYYY') : null,
       comentarios: comentarios,
       usuario: usuario,
-      localidad: localidad
+      localidad: valorLocalidad // Usar valorLocalidad en lugar de localidad
     };
 
     fetch('https://vivosis.vercel.app/api/pedido/', {
@@ -263,8 +264,9 @@ function CrearPedido() {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
+      margin={2}
     >
-      <Card>
+      <Card> 
         <CardContent>
           <h2>Crear Pedido</h2>
           <form>
@@ -354,11 +356,13 @@ function CrearPedido() {
             <br />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+              
                 label="Fecha de entrega"
                 value={fechaEntrega}
                 onChange={handleFechaEntregaChange}
                 renderInput={params => (
                   <TextField
+                    
                     {...params}
                     margin="dense"
                     variant="outlined"
@@ -370,7 +374,7 @@ function CrearPedido() {
             <Autocomplete
               options={listaLocalidades}
               getOptionLabel={option => option.label}
-              value={localidad}
+              value={listaLocalidades.find(localidad => localidad.value === valorLocalidad) || ''}
               onChange={handleLocalidadChange}
               renderInput={params => (
                 <TextField

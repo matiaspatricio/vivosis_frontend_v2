@@ -3,11 +3,13 @@ import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
+import { Card,Box, Typography } from '@mui/material';
+
 
 const useStyles = makeStyles({
   root: {
     height: 400,
-    width: '80%',
+    width: '100%',
     margin: '0 auto',
     '& .MuiDataGrid-root': {
       backgroundColor: '#f5f5f5',
@@ -26,6 +28,7 @@ function EnviosClientes() {
   const classes = useStyles();
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -33,8 +36,10 @@ function EnviosClientes() {
         const response = await axios.get('https://vivosis.vercel.app/api/pedido/getpedidospendientes');
         const data = response.data;
         setPedidos(data);
+        setLoading(false);
       } catch (error) {
         console.log('Error al obtener los pedidos:', error);
+        setLoading(false);
       }
     };
 
@@ -51,6 +56,15 @@ function EnviosClientes() {
     fetchPedidos();
     fetchClientes();
   }, []);
+
+
+  const totalPendiente = pedidos.reduce((total, pedido) => {
+    if (pedido.estado_pago !== 'ABONADO') {
+      return total + (pedido.total || 0);
+    }
+    return total;
+  }, 0);
+
 
   const handleDetalle = async cliente => {
     const pedidosCliente = pedidos.filter(pedido => pedido.nombre_cliente === cliente);
@@ -125,22 +139,36 @@ function EnviosClientes() {
     {
       field: 'detalle',
       headerName: 'Detalle',
-      flex: 1,
+      flex: 1, align : 'center',
       renderCell: params => (
-        <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)}>
-          Detalle
+        <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)}         size="small"
+        style={{ marginLeft: 16 }} >
+          ENVIAR
         </Button>
       ),
     },
   ];
 
   return (
-    <div className={classes.root}>
-      <h2>Resumen de Pedidos por Cliente</h2>
-      <div style={{ height: 600, width: '80%' }}>
-        <DataGrid rows={pedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }}  />
-      </div>
-    </div>
+    <Box>
+      <Typography variant='h3' sx={{margin:5}} align='left' >Resumen de Pedidos por Cliente</Typography>
+    {loading ? (
+      <div>Cargando clientes...</div>
+    ) : (
+      <>
+      
+    <Box className={classes.root}>
+    <Box style={{ maxHeight: '10%', maxWidth: '20%' }} align='left' >
+      <Card sx={{margin:6}} align='left' ><Typography variant='h6' gutterBottom align='center'>Total pendiente: ${totalPendiente}</Typography></Card>
+    </Box>
+      <Box style={{ height: 600, width: '80%' }} align='left' margin={7} >
+        <DataGrid rows={pedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick density='compact' />
+      </Box>
+    </Box>
+    
+    </>
+    )}
+    </Box>
   );
 }
 

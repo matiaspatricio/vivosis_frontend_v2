@@ -333,6 +333,7 @@ function CrearIngreso() {
               onChange={handleUsuarioChange}
               variant="outlined"
               margin="dense"
+              disabled
             />
             <br />
           </form>

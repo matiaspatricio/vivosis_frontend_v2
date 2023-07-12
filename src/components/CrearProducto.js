@@ -18,7 +18,7 @@ function CrearProducto() {
   const [costo, setCosto] = useState('');
   const [stock, setStock] = useState('');
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState('ADMIN');
   const [mensaje, setMensaje] = useState('');
   const [categorias, setCategorias] = useState([]);
   const [subcategorias, setSubcategorias] = useState([]);
@@ -218,6 +218,8 @@ function CrearProducto() {
               onChange={handleComentariosChange}
               variant="outlined"
               margin="dense"
+              rows={4}
+              multiline
             />
             <br />
             <TextField
@@ -227,6 +229,7 @@ function CrearProducto() {
               onChange={handleUsuarioChange}
               variant="outlined"
               margin="dense"
+              disabled
             />
             <br />
           </form>

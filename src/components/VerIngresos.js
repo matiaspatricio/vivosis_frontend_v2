@@ -165,7 +165,7 @@ function VerIngresos() {
           <DataGrid
             rows={filteredIngresos}
             columns={columns}
-            components={{ Toolbar: GridToolbar }}
+            components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick density='compact'
           />
 
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
