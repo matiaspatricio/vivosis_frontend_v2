@@ -28,7 +28,8 @@ import {
   ListItemIcon,
   Drawer,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+//import MenuIcon from '@mui/icons-material/Menu';
+import MenuSharpIcon from '@mui/icons-material/MenuSharp';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -81,7 +82,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerOpen}>
-            <MenuIcon />
+            <MenuSharpIcon/>
           </IconButton>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Menu
