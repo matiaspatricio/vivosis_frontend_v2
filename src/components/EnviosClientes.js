@@ -26,6 +26,7 @@ function EnviosClientes() {
   const classes = useStyles();
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -51,6 +52,10 @@ function EnviosClientes() {
     fetchPedidos();
     fetchClientes();
   }, []);
+
+  const handleSearch = event => {
+    setSearchText(event.target.value);
+  };
 
   const handleDetalle = async cliente => {
     const pedidosCliente = pedidos.filter(pedido => pedido.nombre_cliente === cliente);
@@ -132,6 +137,19 @@ function EnviosClientes() {
     <div className={classes.root}>
       <h2>Resumen de Pedidos por Cliente</h2>
       <div style={{ height: 400, width: '80%' }}>
+        <TextField
+              label="Buscar"
+              variant="outlined"
+              value={searchText}
+              onChange={handleSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
         <DataGrid rows={pedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }} />
       </div>
     </div>
