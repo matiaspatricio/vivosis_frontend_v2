@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';

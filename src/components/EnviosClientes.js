@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 
 
