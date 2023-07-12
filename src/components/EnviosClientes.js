@@ -4,7 +4,6 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 
-
 const useStyles = makeStyles({
   root: {
     height: 400,
@@ -24,9 +23,9 @@ const useStyles = makeStyles({
 });
 
 function EnviosClientes() {
-
   const classes = useStyles();
   const [pedidos, setPedidos] = useState([]);
+  const [clientes, setClientes] = useState([]);
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -39,24 +38,34 @@ function EnviosClientes() {
       }
     };
 
+    const fetchClientes = async () => {
+      try {
+        const response = await axios.get('https://vivosis.vercel.app/api/cliente/getallclientes');
+        const data = response.data;
+        setClientes(data);
+      } catch (error) {
+        console.log('Error al obtener los clientes:', error);
+      }
+    };
+
     fetchPedidos();
+    fetchClientes();
   }, []);
 
-  const handleDetalle = cliente => {
+  const handleDetalle = async cliente => {
     const pedidosCliente = pedidos.filter(pedido => pedido.nombre_cliente === cliente);
     const mensaje = `Hola 😁👋🏻 Soy Narela del vivo de maquillajes 😊, te dejo tu total *(El total del pedido esta en "leer mas" abajo de todo)* :
 
-
   Detalle de tu pedido:
-
     Cliente: ${pedidosCliente[0].nombre_cliente}
     Localidad: ${pedidosCliente[0].localidad}
     Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
     Total: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.total || 0), 0)}
   
   Productos que compraste:
-
-  ${pedidosCliente.map(pedido => `
+  ${pedidosCliente
+    .map(
+      pedido => `
     Producto: ${pedido.nombre_articulo}
     Cantidad: ${pedido.cantidad}
     Precio unitario:$ ${pedido.precio || 0}
@@ -64,19 +73,22 @@ function EnviosClientes() {
     Comentarios: ${pedido.comentarios}
   --------------------------------------
   `
-    ).join('')}
+    )
+    .join('')}
   `;
-  
-    const telefonoCliente = '+5491167892872'; // Número de teléfono del cliente
+
+    const clienteData = clientes.find(c => c.nombre === cliente);
+    if (!clienteData) {
+      console.log('No se encontraron datos del cliente');
+      return;
+    }
+
+    const telefonoCliente = clienteData.telefono;
     const enlace = `https://api.whatsapp.com/send?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
-  
+
     // Abrir WhatsApp en una nueva pestaña
     window.open(enlace, '_blank');
   };
-  
-  
-  
-  
 
   const sumarizarPedidosPorCliente = () => {
     const pedidosPorCliente = {};
@@ -88,7 +100,7 @@ function EnviosClientes() {
           cliente: nombre_cliente,
           total: total,
           fecha_entrega: fecha_entrega,
-          localidad: localidad
+          localidad: localidad,
         };
       } else {
         pedidosPorCliente[nombre_cliente].total += total;
@@ -112,19 +124,15 @@ function EnviosClientes() {
         <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)}>
           Detalle
         </Button>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <div className={classes.root}>
       <h2>Resumen de Pedidos por Cliente</h2>
       <div style={{ height: 400, width: '80%' }}>
-        <DataGrid
-          rows={pedidosPorCliente}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-        />
+        <DataGrid rows={pedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }} />
       </div>
     </div>
   );
