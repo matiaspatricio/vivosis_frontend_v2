@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { makeStyles } from '@mui/styles';
 
-const VISIBLE_FIELDS = ['cliente', 'total', 'fecha_entrega', 'localidad'];
+const useStyles = makeStyles({
+  root: {
+    height: 400,
+    width: '80%',
+    margin: '0 auto',
+    '& .MuiDataGrid-root': {
+      backgroundColor: '#f5f5f5',
+    },
+    '& .MuiDataGrid-cell': {
+      border: '1px solid #ccc',
+      padding: '8px',
+    },
+    '& .MuiButton-root': {
+      marginLeft: '5px',
+    },
+  },
+});
 
 const EnviosClientes = () => {
-  const { data } = useDemoData({
-    dataSet: 'Compras',
-    visibleFields: VISIBLE_FIELDS,
-    rowLength: 100,
-  });
-
+  const classes = useStyles();
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
 
@@ -116,44 +127,25 @@ const EnviosClientes = () => {
     },
   ];
 
-  const filterColumns = ({ field, columns, currentFilters }) => {
-    const filteredFields = currentFilters?.map((item) => item.field);
-    return columns
-      .filter(
-        (colDef) =>
-          colDef.field === field || !filteredFields.includes(colDef.field),
+  const quickFilterHandler = (event) => {
+    const value = event.target.value;
+    const filteredRows = pedidosPorCliente.filter(row =>
+      Object.values(row).some(cellValue =>
+        cellValue.toString().toLowerCase().includes(value.toLowerCase())
       )
-      .map((column) => column.field);
+    );
+    setFilteredPedidos(filteredRows);
   };
 
-  const getColumnForNewFilter = ({ currentFilters, columns }) => {
-    const filteredFields = currentFilters?.map(({ field }) => field);
-    const columnForNewFilter = columns
-      .filter(
-        (colDef) => !filteredFields.includes(colDef.field),
-      )
-      .find((colDef) => colDef.filterOperators?.length);
-    return columnForNewFilter?.field ?? null;
-  };
+  const [filteredPedidos, setFilteredPedidos] = useState(pedidosPorCliente);
 
   return (
-    <div style={{ height: 400, width: '80%', margin: '0 auto' }}>
-      <DataGridPro
-        rows={pedidosPorCliente}
-        columns={columns}
-        components={{ Toolbar: GridToolbar }}
-        filterModel={{
-          items: [],
-        }}
-        filterMode="server"
-        filterPanelVisibleByDefault
-        filterPanelProps={{
-          filterFormProps: {
-            filterColumns,
-          },
-          getColumnForNewFilter,
-        }}
-      />
+    <div className={classes.root}>
+      <h2>Resumen de Pedidos por Cliente</h2>
+      <input type="text" placeholder="Buscar..." onChange={quickFilterHandler} />
+      <div style={{ height: 400, width: '80%' }}>
+        <DataGrid rows={filteredPedidos} columns={columns} components={{ Toolbar: GridToolbar }} />
+      </div>
     </div>
   );
 };
