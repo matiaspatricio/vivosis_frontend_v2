@@ -144,7 +144,13 @@ function VerClientes() {
         <div>Cargando clientes...</div>
       ) : (
         <>
-        <br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/>
+        <div className={classes.centerButtonContainer}>
+            <Button variant="contained" color="primary" onClick={handleCrearCliente}>
+              Crear Cliente
+            </Button>
+          </div>
+          <br/><br/><br/>
           <TextField
             label="Buscar"
             variant="outlined"
@@ -159,11 +165,7 @@ function VerClientes() {
             }}
           />
           <DataGrid rows={filteredClientes} columns={columns} components={{ Toolbar: GridToolbar }} />
-          <div className={classes.centerButtonContainer}>
-            <Button variant="contained" color="primary" onClick={handleCrearCliente}>
-              Crear Cliente
-            </Button>
-          </div>
+
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
             <DialogTitle>Confirmar eliminación</DialogTitle>
             <DialogContent>
