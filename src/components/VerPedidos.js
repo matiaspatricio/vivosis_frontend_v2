@@ -218,7 +218,7 @@ function VerPedidos() {
           <DataGrid 
             rows={filteredPedidos}
             columns={columns}
-            components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick density='compact'
+            components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick 
             density="compact" // Establecer la densidad como "compact"
           />
 
