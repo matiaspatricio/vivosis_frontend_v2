@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   root: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
-const EnviosClientes = () => {
+function EnviosClientes() {
   const classes = useStyles();
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -60,7 +60,7 @@ const EnviosClientes = () => {
     Cliente: ${pedidosCliente[0].nombre_cliente}
     Localidad: ${pedidosCliente[0].localidad}
     Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
-    Total: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.total || 0), 0)}
+    Total: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
   
   Productos que compraste:
   ${pedidosCliente
@@ -86,6 +86,12 @@ const EnviosClientes = () => {
     const telefonoCliente = clienteData.telefono;
     const enlace = `https://api.whatsapp.com/send?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
 
+
+    //const telefonoCliente = '+5491167892872'; // Número de teléfono del cliente
+    //const enlace = `https://api.whatsapp.com/send?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
+  
+
+
     // Abrir WhatsApp en una nueva pestaña
     window.open(enlace, '_blank');
   };
@@ -98,12 +104,12 @@ const EnviosClientes = () => {
         pedidosPorCliente[nombre_cliente] = {
           id: nombre_cliente, // Agregar una propiedad "id" para evitar una advertencia en el DataGrid
           cliente: nombre_cliente,
-          total: total,
+          total: pedido.estado_pago === 'ABONADO' ? 0 : total, // Establecer el total en 0 si el estado de pago es 'ABONADO'
           fecha_entrega: fecha_entrega,
           localidad: localidad,
         };
       } else {
-        pedidosPorCliente[nombre_cliente].total += total;
+        pedidosPorCliente[nombre_cliente].total += pedido.estado_pago === 'ABONADO' ? 0 : total; // Sumar al total solo si el estado de pago no es 'ABONADO'
       }
     });
     return Object.values(pedidosPorCliente);
@@ -128,27 +134,14 @@ const EnviosClientes = () => {
     },
   ];
 
-  const quickFilterHandler = (event) => {
-    const value = event.target.value;
-    const filteredRows = pedidosPorCliente.filter(row =>
-      Object.values(row).some(cellValue =>
-        cellValue.toString().toLowerCase().includes(value.toLowerCase())
-      )
-    );
-    setFilteredPedidos(filteredRows);
-  };
-
-  const [filteredPedidos, setFilteredPedidos] = useState(pedidosPorCliente);
-
   return (
     <div className={classes.root}>
       <h2>Resumen de Pedidos por Cliente</h2>
-      <input type="text" placeholder="Buscar..." onChange={quickFilterHandler} />
-      <div style={{ height: 400, width: '80%' }}>
-        <DataGrid rows={filteredPedidos} columns={columns} components={{ Toolbar: GridToolbar }} />
+      <div style={{ height: 600, width: '80%' }}>
+        <DataGrid rows={pedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }}  />
       </div>
     </div>
   );
-};
+}
 
 export default EnviosClientes;

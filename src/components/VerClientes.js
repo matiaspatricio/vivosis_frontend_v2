@@ -16,6 +16,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { Box } from '@mui/material';
 
 const useStyles = makeStyles({
   root: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles({
     },
     centerButtonContainer: {
       display: 'flex',
-      justifyContent: 'flex-end',
+      justifyContent: 'center',
       marginTop: '20px',
     },
   },
@@ -145,11 +146,13 @@ function VerClientes() {
       ) : (
         <>
         <br/><br/><br/>
-        <div className={classes.centerButtonContainer}>
-            <Button variant="contained" color="primary" onClick={handleCrearCliente}>
-              Crear Clientes
-            </Button>
-          </div>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Button variant="contained" color="primary" onClick={handleCrearCliente}>
+            Crear Cliente
+          </Button>
+        </Box>
+
+          
           <br/><br/><br/>
           <TextField
             label="Buscar"

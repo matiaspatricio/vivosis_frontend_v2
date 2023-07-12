@@ -103,7 +103,7 @@ function App() {
             </ListItemIcon>
             <ListItemText primary="CLIENTES" />
           </ListItem>
-          <ListItem button component={Link} to="/VerProductos" onClick={handleDrawerClose}>
+          <ListItem button component={Link} to="/verproductos" onClick={handleDrawerClose}>
             <ListItemIcon>
               <ShoppingCartIcon />
             </ListItemIcon>
@@ -134,14 +134,14 @@ function App() {
             <ListItemText primary="PEDIDOS" />
           </ListItem>
 
-          <ListItem button component={Link} to="/ActualizaMasivaPedidos" onClick={handleDrawerClose}>
+          <ListItem button component={Link} to="/actualizamasivapedidos" onClick={handleDrawerClose}>
             <ListItemIcon>
               <AssignmentIcon />
             </ListItemIcon>
             <ListItemText primary="ACTUALIZAR PEDIDOS DE CLIENTES" />
           </ListItem>
 
-          <ListItem button component={Link} to="/EnviosClientes" onClick={handleDrawerClose}>
+          <ListItem button component={Link} to="/enviosclientes" onClick={handleDrawerClose}>
             <ListItemIcon>
               <AssignmentIcon />
             </ListItemIcon>
@@ -152,20 +152,20 @@ function App() {
       </Drawer>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/verClientes" element={<VerClientes />} />
-        <Route path="/VerProductos" element={<VerProductos />} />
-        <Route path="/VerIngresos" element={<VerIngresos />} />
-        <Route path="/VerPedidos" element={<VerPedidos />} />
-        <Route path="/ModificarCliente/:id" element={<ModificarCliente />} />
-        <Route path="/ModificarProducto/:id" element={<ModificarProducto />} />
-        <Route path="/ModificarIngreso/:id" element={<ModificarIngreso />} />
-        <Route path="/ModificarPedido/:id" element={<ModificarPedido />} />
-        <Route path="/CrearCliente/" element={<CrearCliente />} />
-        <Route path="/CrearProducto/" element={<CrearProducto />} />
-        <Route path="/CrearIngreso/" element={<CrearIngreso />} />
-        <Route path="/CrearPedido/" element={<CrearPedido />} />
-        <Route path="/ActualizaMasivaPedidos/" element={<ActualizaMasivaPedidos />} />
-        <Route path="/EnviosClientes/" element={<EnviosClientes />} />
+        <Route path="/verclientes" element={<VerClientes />} />
+        <Route path="/Verproductos" element={<VerProductos />} />
+        <Route path="/Veringresos" element={<VerIngresos />} />
+        <Route path="/verpedidos" element={<VerPedidos />} />
+        <Route path="/modificarcliente/:id" element={<ModificarCliente />} />
+        <Route path="/modificarproducto/:id" element={<ModificarProducto />} />
+        <Route path="/modificaringreso/:id" element={<ModificarIngreso />} />
+        <Route path="/modificarpedido/:id" element={<ModificarPedido />} />
+        <Route path="/crearcliente/" element={<CrearCliente />} />
+        <Route path="/crearproducto/" element={<CrearProducto />} />
+        <Route path="/crearingreso/" element={<CrearIngreso />} />
+        <Route path="/crearpedido/" element={<CrearPedido />} />
+        <Route path="/actualizamasivapedidos/" element={<ActualizaMasivaPedidos />} />
+        <Route path="/enviosclientes/" element={<EnviosClientes />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Router>

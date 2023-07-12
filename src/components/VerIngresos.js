@@ -17,6 +17,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import { Box } from '@mui/material';
 
 const useStyles = makeStyles({
   root: {
@@ -141,7 +142,13 @@ function VerIngresos() {
         <div>Cargando ingresos...</div>
       ) : (
         <>
-          <br/><br/><br/><br/><br/><br/>
+          <br/><br/><br/>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Button variant="contained" color="primary" onClick={handleCrearIngreso}>
+              Crear Ingreso
+            </Button>
+          </Box>
+          <br/><br/><br/>
           <TextField
             label="Buscar"
             variant="outlined"
@@ -160,11 +167,7 @@ function VerIngresos() {
             columns={columns}
             components={{ Toolbar: GridToolbar }}
           />
-          <div className={classes['center-button']}>
-            <Button variant="contained" color="primary" onClick={handleCrearIngreso}>
-              Crear Ingreso
-            </Button>
-          </div>
+
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
             <DialogTitle>Confirmar eliminación</DialogTitle>
             <DialogContent>

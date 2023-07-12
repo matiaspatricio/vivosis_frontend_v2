@@ -17,6 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 const useStyles = makeStyles({
   root: {
@@ -189,12 +190,18 @@ function VerPedidos() {
   return (
     <div className={classes.root}>
 
-      <Typography variant='h4' align='center' >PEDIDOS</Typography>
+      
       {loading ? (
         <div>Cargando pedidos...</div>
       ) : (
         <>
-          <br/><br/><br/><br/><br/><br/>
+          <br/><br/><br/>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Button variant="contained" color="primary" onClick={handleCrearPedido}>
+              Crear Pedido
+            </Button>
+            </Box>
+          <br/><br/><br/>
           <TextField
             label="Buscar"
             variant="outlined"
@@ -214,11 +221,7 @@ function VerPedidos() {
             components={{ Toolbar: GridToolbar }}
             density="compact" // Establecer la densidad como "compact"
           />
-          <div className={classes['center-button']}>
-            <Button variant="contained" color="primary" onClick={handleCrearPedido}>
-              Crear Pedido
-            </Button>
-          </div>
+
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
             <DialogTitle>Confirmar eliminación</DialogTitle>
             <DialogContent>

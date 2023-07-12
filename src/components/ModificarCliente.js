@@ -185,7 +185,7 @@ function ModificarCliente() {
             </Button>
           </Box>
           <Box sx={{ mx: 1 }}>
-            <Button variant="contained" component={Link} to="/verclientes">
+            <Button variant="contained" color="secondary" component={Link} to="/verclientes">
               Atrás
             </Button>
           </Box>
