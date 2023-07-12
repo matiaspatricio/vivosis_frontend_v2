@@ -1,29 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
+import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
-const useStyles = makeStyles({
-  root: {
-    height: 400,
-    width: '80%',
-    margin: '0 auto',
-    '& .MuiDataGrid-root': {
-      backgroundColor: '#f5f5f5',
-    },
-    '& .MuiDataGrid-cell': {
-      border: '1px solid #ccc',
-      padding: '8px',
-    },
-    '& .MuiButton-root': {
-      marginLeft: '5px',
-    },
-  },
-});
+const VISIBLE_FIELDS = ['cliente', 'total', 'fecha_entrega', 'localidad'];
 
-function EnviosClientes() {
-  const classes = useStyles();
+const EnviosClientes = () => {
+  const { data } = useDemoData({
+    dataSet: 'Compras',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
+  });
+
   const [pedidos, setPedidos] = useState([]);
   const [clientes, setClientes] = useState([]);
 
@@ -128,15 +116,46 @@ function EnviosClientes() {
     },
   ];
 
+  const filterColumns = ({ field, columns, currentFilters }) => {
+    const filteredFields = currentFilters?.map((item) => item.field);
+    return columns
+      .filter(
+        (colDef) =>
+          colDef.field === field || !filteredFields.includes(colDef.field),
+      )
+      .map((column) => column.field);
+  };
+
+  const getColumnForNewFilter = ({ currentFilters, columns }) => {
+    const filteredFields = currentFilters?.map(({ field }) => field);
+    const columnForNewFilter = columns
+      .filter(
+        (colDef) => !filteredFields.includes(colDef.field),
+      )
+      .find((colDef) => colDef.filterOperators?.length);
+    return columnForNewFilter?.field ?? null;
+  };
+
   return (
-    <div className={classes.root}>
-      <h2>Resumen de Pedidos por Cliente</h2>
-      <div style={{ height: 400, width: '80%' }}>
-        
-        <DataGrid rows={pedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }} />
-      </div>
+    <div style={{ height: 400, width: '80%', margin: '0 auto' }}>
+      <DataGridPro
+        rows={pedidosPorCliente}
+        columns={columns}
+        components={{ Toolbar: GridToolbar }}
+        filterModel={{
+          items: [],
+        }}
+        filterMode="server"
+        filterPanelVisibleByDefault
+        filterPanelProps={{
+          filterFormProps: {
+            filterColumns,
+          },
+          getColumnForNewFilter,
+        }}
+      />
     </div>
   );
-}
+};
 
 export default EnviosClientes;
