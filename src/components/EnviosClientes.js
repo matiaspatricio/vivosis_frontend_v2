@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles({
   root: {
