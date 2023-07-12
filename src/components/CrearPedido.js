@@ -53,7 +53,7 @@ function CrearPedido() {
   ];
 
   useEffect(() => {
-    fetch('http://192.168.0.10:3001/api/cliente/getallclientes')
+    fetch('http://vivosis.vercel.app:3001/api/cliente/getallclientes')
       .then(response => response.json())
       .then(data => {
         setClientes(data);
@@ -62,7 +62,7 @@ function CrearPedido() {
         console.log('Error al obtener los clientes:', error);
       });
 
-    fetch('http://192.168.0.10:3001/api/producto/getallproductos')
+    fetch('http://vivosis.vercel.app:3001/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
         setArticulos(data);
@@ -78,7 +78,7 @@ function CrearPedido() {
   }, [cantidad, precio]);
 
   const fetchPrecioProducto = productId => {
-    fetch(`http://192.168.0.10:3001/api/producto/${productId}`)
+    fetch(`http://vivosis.vercel.app:3001/api/producto/${productId}`)
       .then(response => response.json())
       .then(data => {
         setPrecio(data.precio);
@@ -181,14 +181,14 @@ function CrearPedido() {
   };
 
   const actualizarStockProducto = (productId, quantity) => {
-    fetch(`http://192.168.0.10:3001/api/producto/${productId}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/producto/${productId}`, {
       method: 'GET'
     })
       .then(response => response.json())
       .then(producto => {
         producto.stock -= quantity;
 
-        fetch(`http://192.168.0.10:3001/api/producto/${productId}`, {
+        fetch(`http://vivosis.vercel.app:3001/api/producto/${productId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -235,7 +235,7 @@ function CrearPedido() {
       localidad: localidad
     };
 
-    fetch('http://192.168.0.10:3001/api/pedido/', {
+    fetch('http://vivosis.vercel.app:3001/api/pedido/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -49,7 +49,7 @@ function VerIngresos() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.0.10:3001/api/ingreso/getAllIngresos')
+    fetch('http://vivosis.vercel.app:3001/api/ingreso/getAllIngresos')
       .then(response => response.json())
       .then(data => {
         const ingresosConId = data.map(ingreso => ({
@@ -79,7 +79,7 @@ function VerIngresos() {
 
   const confirmDelete = () => {
     setConfirmDialogOpen(false);
-    fetch(`http://192.168.0.10:3001/api/ingreso/${selectedIngreso}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/ingreso/${selectedIngreso}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

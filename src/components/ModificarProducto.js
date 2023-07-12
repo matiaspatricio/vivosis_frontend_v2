@@ -37,7 +37,7 @@ function ModificarProducto() {
   const [guardarHabilitado, setGuardarHabilitado] = useState(true);
 
   useEffect(() => {
-    fetch(`http://192.168.0.10:3001/api/producto/${id}`)
+    fetch(`http://vivosis.vercel.app:3001/api/producto/${id}`)
       .then(response => response.json())
       .then(data => {
         setProducto(data);
@@ -45,7 +45,7 @@ function ModificarProducto() {
       .catch(error => {
         console.log('Error al cargar el producto:', error);
       });
-    fetch('http://192.168.0.10:3001/api/categoria/getAllCategorias')
+    fetch('http://vivosis.vercel.app:3001/api/categoria/getAllCategorias')
       .then(response => response.json())
       .then(data => {
         setCategoriasDialog(data);
@@ -112,7 +112,7 @@ function ModificarProducto() {
       comentarios,
       usuario
     };
-    fetch(`http://192.168.0.10:3001/api/producto/${id}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/producto/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

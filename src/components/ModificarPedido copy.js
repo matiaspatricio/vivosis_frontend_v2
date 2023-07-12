@@ -36,7 +36,7 @@ function ModificarPedido() {
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
 
   useEffect(() => {
-    fetch(`http://192.168.0.10:3001/api/pedido/${id}`)
+    fetch(`http://vivosis.vercel.app:3001/api/pedido/${id}`)
       .then(response => response.json())
       .then(data => {
         setPedido(data);
@@ -149,7 +149,7 @@ function ModificarPedido() {
       fecha_entrega : fechaEntrega, // Agregar fecha de entrega al objeto del pedido modificado
       usuario,
     };
-    fetch(`http://192.168.0.10:3001/api/pedido/${id}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/pedido/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

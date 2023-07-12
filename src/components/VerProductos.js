@@ -48,7 +48,7 @@ function VerProductos() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.0.10:3001/api/producto/getallproductos')
+    fetch('http://vivosis.vercel.app:3001/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
         const productosConId = data.map(producto => ({
@@ -72,7 +72,7 @@ function VerProductos() {
 
   const confirmDelete = id => {
     setConfirmDialogOpen(false);
-    fetch(`http://192.168.0.10:3001/api/producto/${selectedProduct}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/producto/${selectedProduct}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

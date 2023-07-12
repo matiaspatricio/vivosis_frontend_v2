@@ -50,7 +50,7 @@ function VerPedidos() {
   
 
   useEffect(() => {
-    fetch('http://192.168.0.10:3001/api/pedido/getallpedidos')
+    fetch('http://vivosis.vercel.app:3001/api/pedido/getallpedidos')
       .then(response => response.json())
       .then(data => {
         const pedidosConId = data.map(pedido => ({
@@ -81,14 +81,14 @@ function VerPedidos() {
 
 
   const actualizarStockProducto = (productId, quantity) => {
-    fetch(`http://192.168.0.10:3001/api/producto/${productId}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/producto/${productId}`, {
       method: 'GET'
     })
       .then(response => response.json())
       .then(producto => {
         producto.stock += quantity;
 
-        fetch(`http://192.168.0.10:3001/api/producto/${productId}`, {
+        fetch(`http://vivosis.vercel.app:3001/api/producto/${productId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ function VerPedidos() {
     const pedidoAEliminar = pedidos.find(pedido => pedido.id === selectedPedido);
     console.log("PedidoAEliminar: ", pedidoAEliminar);
     actualizarStockProducto(pedidoAEliminar.id_articulo, pedidoAEliminar.cantidad); // Actualizar el stock del producto
-    fetch(`http://192.168.0.10:3001/api/pedido/${selectedPedido}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/pedido/${selectedPedido}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

@@ -53,7 +53,7 @@ function VerClientes() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.0.10:3001/api/cliente/getallclientes')
+    fetch('http://vivosis.vercel.app:3001/api/cliente/getallclientes')
       .then(response => response.json())
       .then(data => {
         const clientesConId = data.map(cliente => ({
@@ -81,7 +81,7 @@ function VerClientes() {
 
   const confirmDelete = () => {
     setConfirmDialogOpen(false);
-    fetch(`http://192.168.0.10:3001/api/cliente/${selectedClient}`, {
+    fetch(`http://vivosis.vercel.app:3001/api/cliente/${selectedClient}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

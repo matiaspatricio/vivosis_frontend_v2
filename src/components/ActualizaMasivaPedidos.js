@@ -69,7 +69,7 @@ function ActualizaMasivaPedidos() {
 
     const fetchPedidos = async () => {
       try {
-        const response = await axios.get('http://192.168.0.10:3001/api/pedido/getPedidosPendientes');
+        const response = await axios.get('http://vivosis.vercel.app:3001/api/pedido/getPedidosPendientes');
         const data = response.data;
         setPedidos(data);
         const uniqueClientes = Array.from(new Set(data.map(pedido => pedido.nombre_cliente)));
@@ -144,7 +144,7 @@ function ActualizaMasivaPedidos() {
     }));
 
     pedidosActualizados.forEach(pedido => {
-      axios.put(`http://192.168.0.10:3001/api/pedido/${pedido._id}`, pedido)
+      axios.put(`http://vivosis.vercel.app:3001/api/pedido/${pedido._id}`, pedido)
         .then(response => {
           setMensaje('¡Pedido actualizado con éxito!');
           setMostrarMensaje(true);
