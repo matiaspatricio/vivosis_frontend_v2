@@ -30,7 +30,7 @@ function ModificarCliente() {
   const [guardarHabilitado, setGuardarHabilitado] = useState(true);
 
   useEffect(() => {
-    fetch(`https://vivosis.vercel.app:3001/api/cliente/${id}`)
+    fetch(`https://vivosis.vercel.app/api/cliente/${id}`)
       .then(response => response.json())
       .then(data => {
         setCliente(data);
@@ -85,7 +85,7 @@ function ModificarCliente() {
       estado,
       usuario
     };
-    fetch(`https://vivosis.vercel.app:3001/api/cliente/${id}`, {
+    fetch(`https://vivosis.vercel.app/api/cliente/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

@@ -31,7 +31,7 @@ function EnviosClientes() {
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const response = await axios.get('https://vivosis.vercel.app:3001/api/pedido/getPedidosPendientes');
+        const response = await axios.get('https://vivosis.vercel.app/api/pedido/getpedidospendientes');
         const data = response.data;
         setPedidos(data);
       } catch (error) {

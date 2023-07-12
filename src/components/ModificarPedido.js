@@ -54,7 +54,7 @@ function ModificarPedido() {
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    fetch(`https://vivosis.vercel.app:3001/api/pedido/${id}`)
+    fetch(`https://vivosis.vercel.app/api/pedido/${id}`)
       .then(response => response.json())
       .then(data => {
         setPedido(data);
@@ -151,7 +151,7 @@ function ModificarPedido() {
 
   const actualizarStock = (cantidadOriginal, nuevaCantidad) => {
     // Obtener el producto correspondiente al artículo del pedido
-    fetch(`https://vivosis.vercel.app:3001/api/producto/${idArticulo}`)
+    fetch(`https://vivosis.vercel.app/api/producto/${idArticulo}`)
       .then(response => response.json())
       .then(producto => {
         // Actualizar el stock del producto sumando la cantidad original del artículo al stock
@@ -169,7 +169,7 @@ function ModificarPedido() {
   };
 
   const guardarCambiosEnProducto = producto => {
-    fetch(`https://vivosis.vercel.app:3001/api/producto/${producto._id}`, {
+    fetch(`https://vivosis.vercel.app/api/producto/${producto._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -215,7 +215,7 @@ function ModificarPedido() {
 
     const cantidadOriginal = pedido.cantidad; // Guardar la cantidad original del pedido antes de la modificación
 
-    fetch(`https://vivosis.vercel.app:3001/api/pedido/${id}`, {
+    fetch(`https://vivosis.vercel.app/api/pedido/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
