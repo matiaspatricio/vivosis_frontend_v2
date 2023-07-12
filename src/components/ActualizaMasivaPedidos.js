@@ -34,10 +34,10 @@ function ActualizaMasivaPedidos() {
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
   const [mensaje, setMensaje] = useState('');
-  const [checkFechaEntrega, setCheckFechaEntrega] = useState(true);
-  const [checkLocalidad, setCheckLocalidad] = useState(true);
-  const [checkEstadoPedido, setCheckEstadoPedido] = useState(true);
-  const [checkEstadoPago, setCheckEstadoPago] = useState(true);
+  const [checkFechaEntrega, setCheckFechaEntrega] = useState(false);
+  const [checkLocalidad, setCheckLocalidad] = useState(false);
+  const [checkEstadoPedido, setCheckEstadoPedido] = useState(false);
+  const [checkEstadoPago, setCheckEstadoPago] = useState(false);
 
   useEffect(() => {
     const listaLocalidades = [
