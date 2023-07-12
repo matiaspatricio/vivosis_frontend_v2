@@ -212,6 +212,7 @@ function VerPedidos() {
             rows={filteredPedidos}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
+            density="compact" // Establecer la densidad como "compact"
           />
           <div className={classes['center-button']}>
             <Button variant="contained" color="primary" onClick={handleCrearPedido}>
