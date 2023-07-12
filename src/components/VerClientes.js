@@ -147,7 +147,7 @@ function VerClientes() {
         <br/><br/><br/>
         <div className={classes.centerButtonContainer}>
             <Button variant="contained" color="primary" onClick={handleCrearCliente}>
-              Crear Cliente
+              Crear Clientes
             </Button>
           </div>
           <br/><br/><br/>
