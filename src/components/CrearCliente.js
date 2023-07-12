@@ -85,7 +85,7 @@ function CrearCliente() {
       estado,
       usuario
     };
-    fetch('http://vivosis.vercel.app:3001/api/cliente/', {
+    fetch('https://vivosis.vercel.app:3001/api/cliente/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

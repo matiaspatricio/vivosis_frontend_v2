@@ -26,7 +26,7 @@ function CrearProducto() {
   const [mensajeError, setMensajeError] = useState(false);
 
   useEffect(() => {
-    fetch('http://vivosis.vercel.app:3001/api/categoria/getAllCategorias')
+    fetch('https://vivosis.vercel.app:3001/api/categoria/getAllCategorias')
       .then(response => response.json())
       .then(data => {
         setCategorias(data);
@@ -113,7 +113,7 @@ function CrearProducto() {
       usuario
     };
 
-    fetch('http://vivosis.vercel.app:3001/api/producto/', {
+    fetch('https://vivosis.vercel.app:3001/api/producto/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
