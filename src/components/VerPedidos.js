@@ -230,7 +230,7 @@ function VerPedidos() {
   };
 
   const estadosPedido = ['PENDIENTE', 'PREPARADO', 'FINALIZADO', 'CANCELADO'];
-  const estadosPago = ['PENDIENTE', 'PAGADO'];
+  const estadosPago = ['PENDIENTE', 'ABONADO'];
 
   return (
     <div className={classes.root}>
