@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useNavigate } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -17,13 +18,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Typography } from '@mui/material';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
 
 const useStyles = makeStyles({
   root: {
     height: 400,
     width: '100%',
-    margin: '0 auto',
+    margin: '10px auto',
     '& .MuiDataGrid-root': {
       backgroundColor: '#f5f5f5',
     },
@@ -35,6 +37,12 @@ const useStyles = makeStyles({
       marginLeft: '5px',
     },
   },
+  filtersContainer: {
+    marginBottom: '10px',
+  },
+  filterInput: {
+    width: '180px',
+  },
 });
 
 function VerPedidos() {
@@ -44,11 +52,14 @@ function VerPedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
-  const [refreshCount, setRefreshCount] = useState(0); // Nuevo estado para contar las actualizaciones
+  const [refreshCount, setRefreshCount] = useState(0);
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  
+  const [filterEstadoPedido, setFilterEstadoPedido] = useState([]);
+  const [filterEstadoPago, setFilterEstadoPago] = useState([]);
+  const [filterNombreCliente, setFilterNombreCliente] = useState([]);
+  const [filterNombreArticulo, setFilterNombreArticulo] = useState([]);
 
   useEffect(() => {
     fetch('https://vivosis.vercel.app/api/pedido/getallpedidos')
@@ -57,7 +68,7 @@ function VerPedidos() {
         const pedidosConId = data.map(pedido => ({
           id: pedido._id,
           ...pedido,
-          fecha_entrega: pedido.fecha_entrega, // Formatear la fecha
+          fecha_entrega: pedido.fecha_entrega,
         }));
         setPedidos(pedidosConId);
         setLoading(false);
@@ -72,6 +83,7 @@ function VerPedidos() {
     console.log(id);
     navigate(`/ModificarPedido/${id}`);
   };
+
   const handleCancelDelete = () => {
     setConfirmDialogOpen(false);
   };
@@ -80,10 +92,9 @@ function VerPedidos() {
     setSnackbarOpen(false);
   };
 
-
   const actualizarStockProducto = (productId, quantity) => {
     fetch(`https://vivosis.vercel.app/api/producto/${productId}`, {
-      method: 'GET'
+      method: 'GET',
     })
       .then(response => response.json())
       .then(producto => {
@@ -92,12 +103,12 @@ function VerPedidos() {
         fetch(`https://vivosis.vercel.app/api/producto/${productId}`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(producto)
+          body: JSON.stringify(producto),
         })
           .then(response => response.json())
-         .then(data => {
+          .then(data => {
             console.log('Stock del producto actualizado:', data);
           })
           .catch(error => {
@@ -112,14 +123,14 @@ function VerPedidos() {
   const confirmDelete = () => {
     setConfirmDialogOpen(false);
     const pedidoAEliminar = pedidos.find(pedido => pedido.id === selectedPedido);
-    console.log("PedidoAEliminar: ", pedidoAEliminar);
-    actualizarStockProducto(pedidoAEliminar.id_articulo, pedidoAEliminar.cantidad); // Actualizar el stock del producto
+    console.log('PedidoAEliminar: ', pedidoAEliminar);
+    actualizarStockProducto(pedidoAEliminar.id_articulo, pedidoAEliminar.cantidad);
     fetch(`https://vivosis.vercel.app/api/pedido/${selectedPedido}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
       .then(response => response.json())
       .then(data => {
-        setRefreshCount(prevCount => prevCount + 1); // Incrementar el contador para forzar la actualización de la grilla
+        setRefreshCount(prevCount => prevCount + 1);
         setSnackbarOpen(true);
       })
       .catch(error => {
@@ -131,8 +142,24 @@ function VerPedidos() {
     setSearchText(event.target.value);
   };
 
+  const handleFilterEstadoPedidoChange = (event, value) => {
+    setFilterEstadoPedido(value);
+  };
+
+  const handleFilterEstadoPagoChange = (event, value) => {
+    setFilterEstadoPago(value);
+  };
+
+  const handleFilterNombreClienteChange = (event, value) => {
+    setFilterNombreCliente(value);
+  };
+
+  const handleFilterNombreArticuloChange = (event, value) => {
+    setFilterNombreArticulo(value);
+  };
+
   const formatDate = date => {
-    const formattedDate = new Date(date).toLocaleDateString('es-AR'); // Formatear la fecha a "DD/MM/YYYY"
+    const formattedDate = new Date(date).toLocaleDateString('es-AR');
     return formattedDate;
   };
 
@@ -140,11 +167,25 @@ function VerPedidos() {
     pedido && pedido.nombre_cliente && pedido.nombre_cliente.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const filteredPedidosByEstadoPedido = filterEstadoPedido.length > 0
+    ? filteredPedidos.filter(pedido => filterEstadoPedido.includes(pedido.estado_pedido))
+    : filteredPedidos;
+
+  const filteredPedidosByEstadoPago = filterEstadoPago.length > 0
+    ? filteredPedidosByEstadoPedido.filter(pedido => filterEstadoPago.includes(pedido.estado_pago))
+    : filteredPedidosByEstadoPedido;
+
+  const filteredPedidosByNombreCliente = filterNombreCliente.length > 0
+    ? filteredPedidosByEstadoPago.filter(pedido => filterNombreCliente.includes(pedido.nombre_cliente))
+    : filteredPedidosByEstadoPago;
+
+  const filteredPedidosByNombreArticulo = filterNombreArticulo.length > 0
+    ? filteredPedidosByNombreCliente.filter(pedido => filterNombreArticulo.includes(pedido.nombre_articulo))
+    : filteredPedidosByNombreCliente;
+
   const columns = [
     { field: 'fecha', headerName: 'Fecha', flex: 0.5 },
-    //{ field: 'id_cliente', headerName: 'ID Cliente', flex: 1 },
     { field: 'nombre_cliente', headerName: 'Cliente', flex: 0.5 },
-    //{ field: 'id_articulo', headerName: 'ID Artículo', flex: 1 },
     { field: 'localidad', headerName: 'Localidad', flex: 0.5 },
     { field: 'nombre_articulo', headerName: 'Artículo', flex: 0.7 },
     { field: 'cantidad', headerName: 'Cantidad', flex: 0.3 },
@@ -153,7 +194,7 @@ function VerPedidos() {
     { field: 'costo', headerName: 'Costo', flex: 0.2 },
     { field: 'estado_pedido', headerName: 'Estado Pedido', flex: 0.4 },
     { field: 'estado_pago', headerName: 'Estado Pago', flex: 0.4 },
-    { field: 'fecha_entrega', headerName: 'Fecha de entrega', flex: 0.5 }, // Nuevo campo "Fecha de entrega"
+    { field: 'fecha_entrega', headerName: 'Fecha de entrega', flex: 0.5 },
     { field: 'comentarios', headerName: 'Comentarios', flex: 1 },
     { field: 'usuario', headerName: 'Usuario', flex: 0.5 },
     {
@@ -164,13 +205,13 @@ function VerPedidos() {
         <>
           <IconButton
             aria-label="Editar"
-            onClick={() => handleEdit(params.row._id)}
+            onClick={() => handleEdit(params.row.id)}
           >
             <EditIcon />
           </IconButton>
           <IconButton
             aria-label="Eliminar"
-            onClick={() => handleDelete(params.row._id)}
+            onClick={() => handleDelete(params.row.id)}
           >
             <DeleteIcon />
           </IconButton>
@@ -183,43 +224,97 @@ function VerPedidos() {
     setSelectedPedido(id);
     setConfirmDialogOpen(true);
   };
+
   const handleCrearPedido = () => {
     navigate('/CrearPedido');
   };
 
+  const estadosPedido = ['PENDIENTE', 'PREPARADO', 'FINALIZADO', 'CANCELADO'];
+  const estadosPago = ['PENDIENTE', 'PAGADO'];
+
   return (
     <div className={classes.root}>
-
-      
       {loading ? (
-        <div>Cargando pedidos...</div>
+        <Box>Cargando pedidos...</Box>
       ) : (
         <>
-          <br/><br/><br/>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Button variant="contained" color="primary" onClick={handleCrearPedido}>
+        
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
+          
+            <Button variant="contained" color="success" onClick={handleCrearPedido} size="large" endIcon={<CreateIcon />} >
               Crear Pedido
             </Button>
-            </Box>
-          <br/><br/><br/>
-          <TextField
-            label="Buscar"
-            variant="outlined"
-            value={searchText}
-            onChange={handleSearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <DataGrid 
-            rows={filteredPedidos}
+          </Box>
+          <Grid container className={classes.filtersContainer}>
+            <Grid item xs={6}>
+              <Autocomplete
+                multiple
+                options={estadosPedido}
+                value={filterEstadoPedido}
+                onChange={handleFilterEstadoPedidoChange}
+                renderInput={params => (
+                  <TextField {...params} label="Estado Pedido" variant="outlined" className={classes.filterInput} />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Autocomplete
+                multiple
+                options={estadosPago}
+                value={filterEstadoPago}
+                onChange={handleFilterEstadoPagoChange}
+                renderInput={params => (
+                  <TextField {...params} label="Estado Pago" variant="outlined" className={classes.filterInput} />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Autocomplete
+                multiple
+                options={filterNombreCliente}
+                value={filterNombreCliente}
+                onChange={handleFilterNombreClienteChange}
+                renderInput={params => (
+                  <TextField {...params} label="Nombre Cliente" variant="outlined" className={classes.filterInput} />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Autocomplete
+                multiple
+                options={filterNombreArticulo}
+                value={filterNombreArticulo}
+                onChange={handleFilterNombreArticuloChange}
+                renderInput={params => (
+                  <TextField {...params} label="Nombre Artículo" variant="outlined" className={classes.filterInput} />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Buscar"
+                variant="outlined"
+                value={searchText}
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                className={classes.filterInput}
+              />
+            </Grid>
+          </Grid>
+          <DataGrid
+            rows={filteredPedidosByNombreArticulo}
             columns={columns}
-            components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick 
-            density="compact" // Establecer la densidad como "compact"
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            disableRowSelectionOnClick
+            density="compact"
           />
 
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
@@ -227,7 +322,7 @@ function VerPedidos() {
             <DialogContent>
               <DialogContentText>
                 ¿Estás seguro de que deseas eliminar este pedido?
-  </DialogContentText>
+              </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCancelDelete} color="primary">
