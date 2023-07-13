@@ -39,6 +39,8 @@ const useStyles = makeStyles({
   },
   filtersContainer: {
     marginBottom: '10px',
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   filterInput: {
     width: '180px',
@@ -58,8 +60,10 @@ function VerPedidos() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [filterEstadoPedido, setFilterEstadoPedido] = useState([]);
   const [filterEstadoPago, setFilterEstadoPago] = useState([]);
-  const [filterNombreCliente, setFilterNombreCliente] = useState([]);
-  const [filterNombreArticulo, setFilterNombreArticulo] = useState([]);
+  const [filterNombreClienteValue, setFilterNombreClienteValue] = useState([]);
+  const [filterNombreClienteOptions, setFilterNombreClienteOptions] = useState([]);
+  const [filterNombreArticuloValue, setFilterNombreArticuloValue] = useState([]);
+  const [filterNombreArticuloOptions, setFilterNombreArticuloOptions] = useState([]);
 
   useEffect(() => {
     fetch('https://vivosis.vercel.app/api/pedido/getallpedidos')
@@ -78,6 +82,16 @@ function VerPedidos() {
         setLoading(false);
       });
   }, [refreshCount]);
+
+  useEffect(() => {
+    const nombreClienteOptions = Array.from(new Set(pedidos.map(pedido => pedido.nombre_cliente)));
+    setFilterNombreClienteOptions(nombreClienteOptions);
+  }, [pedidos]);
+
+  useEffect(() => {
+    const nombreArticuloOptions = Array.from(new Set(pedidos.map(pedido => pedido.nombre_articulo)));
+    setFilterNombreArticuloOptions(nombreArticuloOptions);
+  }, [pedidos]);
 
   const handleEdit = id => {
     console.log(id);
@@ -151,11 +165,11 @@ function VerPedidos() {
   };
 
   const handleFilterNombreClienteChange = (event, value) => {
-    setFilterNombreCliente(value);
+    setFilterNombreClienteValue(value);
   };
 
   const handleFilterNombreArticuloChange = (event, value) => {
-    setFilterNombreArticulo(value);
+    setFilterNombreArticuloValue(value);
   };
 
   const formatDate = date => {
@@ -175,12 +189,12 @@ function VerPedidos() {
     ? filteredPedidosByEstadoPedido.filter(pedido => filterEstadoPago.includes(pedido.estado_pago))
     : filteredPedidosByEstadoPedido;
 
-  const filteredPedidosByNombreCliente = filterNombreCliente.length > 0
-    ? filteredPedidosByEstadoPago.filter(pedido => filterNombreCliente.includes(pedido.nombre_cliente))
+  const filteredPedidosByNombreCliente = filterNombreClienteValue.length > 0
+    ? filteredPedidosByEstadoPago.filter(pedido => filterNombreClienteValue.includes(pedido.nombre_cliente))
     : filteredPedidosByEstadoPago;
 
-  const filteredPedidosByNombreArticulo = filterNombreArticulo.length > 0
-    ? filteredPedidosByNombreCliente.filter(pedido => filterNombreArticulo.includes(pedido.nombre_articulo))
+  const filteredPedidosByNombreArticulo = filterNombreArticuloValue.length > 0
+    ? filteredPedidosByNombreCliente.filter(pedido => filterNombreArticuloValue.includes(pedido.nombre_articulo))
     : filteredPedidosByNombreCliente;
 
   const columns = [
@@ -238,9 +252,7 @@ function VerPedidos() {
         <Box>Cargando pedidos...</Box>
       ) : (
         <>
-        
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
-          
             <Button variant="contained" color="success" onClick={handleCrearPedido} size="large" endIcon={<CreateIcon />} >
               Crear Pedido
             </Button>
@@ -271,8 +283,8 @@ function VerPedidos() {
             <Grid item xs={6}>
               <Autocomplete
                 multiple
-                options={filterNombreCliente}
-                value={filterNombreCliente}
+                options={filterNombreClienteOptions}
+                value={filterNombreClienteValue}
                 onChange={handleFilterNombreClienteChange}
                 renderInput={params => (
                   <TextField {...params} label="Nombre Cliente" variant="outlined" className={classes.filterInput} />
@@ -282,8 +294,8 @@ function VerPedidos() {
             <Grid item xs={6}>
               <Autocomplete
                 multiple
-                options={filterNombreArticulo}
-                value={filterNombreArticulo}
+                options={filterNombreArticuloOptions}
+                value={filterNombreArticuloValue}
                 onChange={handleFilterNombreArticuloChange}
                 renderInput={params => (
                   <TextField {...params} label="Nombre Artículo" variant="outlined" className={classes.filterInput} />
