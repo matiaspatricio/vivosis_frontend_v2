@@ -39,6 +39,7 @@ function ActualizaMasivaPedidos() {
   const [checkEstadoPedido, setCheckEstadoPedido] = useState(false);
   const [checkEstadoPago, setCheckEstadoPago] = useState(false);
 
+
   useEffect(() => {
     const listaLocalidades = [
       { value: '', label: 'VACIO' },
@@ -146,7 +147,7 @@ function ActualizaMasivaPedidos() {
     pedidosActualizados.forEach(pedido => {
       axios.put(`https://vivosis.vercel.app/api/pedido/${pedido._id}`, pedido)
         .then(response => {
-          setMensaje('¡Pedido actualizado con éxito!');
+          setMensaje('¡Pedido(s) actualizado(s) con éxito!');
           setMostrarMensaje(true);
 
         })
@@ -284,6 +285,20 @@ function ActualizaMasivaPedidos() {
         </CardActions>
         </Box>
         </Card>
+        <Snackbar
+        open={mostrarMensaje}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleSnackbarClose}
+          severity="success"
+        >
+          {mensaje}
+        </MuiAlert>
+      </Snackbar>
         </Box>
         </>
       );
