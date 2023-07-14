@@ -18,6 +18,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import { Box } from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
 
 const useStyles = makeStyles({
   root: {
@@ -143,8 +144,9 @@ function VerIngresos() {
       ) : (
         <>
           <br/><br/><br/>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Button variant="contained" color="primary" onClick={handleCrearIngreso}>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
+          <Button variant="contained" color="primary" onClick={handleCrearIngreso} size="large" endIcon={<CreateIcon />} >
               Crear Ingreso
             </Button>
           </Box>

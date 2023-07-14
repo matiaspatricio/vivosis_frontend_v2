@@ -17,6 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Box } from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
 
 const useStyles = makeStyles({
   root: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles({
     width: '70%',
     margin: '0 auto',
     '& .MuiDataGrid-root': {
+      border: '1px solid #ccc',
       backgroundColor: '#f5f5f5',
     },
     '& .MuiDataGrid-cell': {
@@ -154,8 +156,9 @@ function VerProductos() {
       ) : (
         <>
           <br/><br/><br/>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Button variant="contained" color="primary" onClick={handleCrearProducto}>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
+            <Button variant="contained" color="primary" onClick={handleCrearProducto} size="large" endIcon={<CreateIcon />} >
               Crear Producto
             </Button>
             </Box>

@@ -2,18 +2,48 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import theme from './theme';
 
+import { createTheme } from '@mui/material/styles';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+
+
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976D2',
+      light: '#BBDEFB',
+      dark: '#2196F3',
+      contrastText: '#FFFFFF',
+    },
+    secondary: {
+      main: '#607D8B',
+      contrastText: '#FFFFFF',
+    },
+    text: {
+      primary: '#212121',
+      secondary: '#757575',
+    },
+    divider: '#BDBDBD',
+    background: {
+      default: '#E3F2FD',
+    },
+    
+  },
+  
+});
+
 
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    
-    
+  <React.StrictMode>    
+    <ThemeProvider theme={theme}>
+      <CssBaseline>        
         <App />
+      </CssBaseline>
+    </ThemeProvider>
     
     
   </React.StrictMode>

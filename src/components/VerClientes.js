@@ -17,13 +17,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Box } from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
 
 const useStyles = makeStyles({
   root: {
     height: 400,
-    width: '70%',
-    margin: '0 auto',
+    width: '100%',
+    margin: '10px auto',
     '& .MuiDataGrid-root': {
+      border: '1px solid #ccc',
       backgroundColor: '#f5f5f5',
     },
     '& .MuiDataGrid-cell': {
@@ -33,11 +35,14 @@ const useStyles = makeStyles({
     '& .MuiButton-root': {
       marginLeft: '5px',
     },
-    centerButtonContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      marginTop: '20px',
-    },
+  },
+  filtersContainer: {
+    marginBottom: '10px',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  filterInput: {
+    width: '180px',
   },
 });
 
@@ -146,11 +151,13 @@ function VerClientes() {
       ) : (
         <>
         <br/><br/><br/>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Button variant="contained" color="primary" onClick={handleCrearCliente}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
+            <Button variant="contained" color="primary" onClick={handleCrearCliente} size="large" endIcon={<CreateIcon />} >
             Crear Cliente
           </Button>
-        </Box>          
+        </Box>   
+
+               
           <br/><br/><br/>
           <TextField
             label="Buscar"

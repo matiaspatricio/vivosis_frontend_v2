@@ -27,7 +27,8 @@ const useStyles = makeStyles({
     width: '100%',
     margin: '10px auto',
     '& .MuiDataGrid-root': {
-      backgroundColor: '#f5f5f5',
+      border: '1px solid #ccc',
+      backgroundColor: '#ffffff',
     },
     '& .MuiDataGrid-cell': {
       border: '1px solid #ccc',
@@ -38,7 +39,7 @@ const useStyles = makeStyles({
     },
   },
   filtersContainer: {
-    marginBottom: '10px',
+    margin: '10px',
     display: 'flex',
     justifyContent: 'space-between',
   },
@@ -252,14 +253,14 @@ function VerPedidos() {
         <Box>Cargando pedidos...</Box>
       ) : (
         <>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px' }}>
-            <Button variant="contained" color="success" onClick={handleCrearPedido} size="large" endIcon={<CreateIcon />} >
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
+            <Button variant="contained" color="primary" onClick={handleCrearPedido} size="large" endIcon={<CreateIcon />} >
               Crear Pedido
             </Button>
           </Box>
           <Grid container className={classes.filtersContainer}>
             <Grid item xs={6}>
-              <Autocomplete
+              <Autocomplete className={classes.filtersContainer}
                 multiple
                 options={estadosPedido}
                 value={filterEstadoPedido}
@@ -268,20 +269,9 @@ function VerPedidos() {
                   <TextField {...params} label="Estado Pedido" variant="outlined" className={classes.filterInput} />
                 )}
               />
-            </Grid>
+            </Grid>            
             <Grid item xs={6}>
-              <Autocomplete
-                multiple
-                options={estadosPago}
-                value={filterEstadoPago}
-                onChange={handleFilterEstadoPagoChange}
-                renderInput={params => (
-                  <TextField {...params} label="Estado Pago" variant="outlined" className={classes.filterInput} />
-                )}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Autocomplete
+              <Autocomplete className={classes.filtersContainer}
                 multiple
                 options={filterNombreClienteOptions}
                 value={filterNombreClienteValue}
@@ -292,7 +282,19 @@ function VerPedidos() {
               />
             </Grid>
             <Grid item xs={6}>
-              <Autocomplete
+              <Autocomplete className={classes.filtersContainer}
+                multiple
+                options={estadosPago}
+                value={filterEstadoPago}
+                onChange={handleFilterEstadoPagoChange}
+                renderInput={params => (
+                  <TextField {...params} label="Estado Pago" variant="outlined" className={classes.filterInput} />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Autocomplete className={classes.filtersContainer}
+                fullWidth
                 multiple
                 options={filterNombreArticuloOptions}
                 value={filterNombreArticuloValue}
@@ -302,7 +304,7 @@ function VerPedidos() {
                 )}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.filtersContainer}>
               <TextField
                 label="Buscar"
                 variant="outlined"
@@ -319,7 +321,7 @@ function VerPedidos() {
               />
             </Grid>
           </Grid>
-          <DataGrid
+          <DataGrid 
             rows={filteredPedidosByNombreArticulo}
             columns={columns}
             components={{
