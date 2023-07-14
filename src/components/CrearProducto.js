@@ -51,6 +51,7 @@ function CrearProducto() {
   };
 
   const handleSubcategoriaChange = event => {
+    
     setSubcategoria(event.target.value);
   };
 
@@ -102,17 +103,22 @@ function CrearProducto() {
       return;
     }
 
-    const nuevoProducto = {
-      nombre,
-      categoria,
-      subcategoria,
-      precio,
-      costo,
-      stock,
-      comentarios,
-      usuario
-    };
+      // Obtener los nombres de la categoría y subcategoría seleccionadas
+      const categoriaSeleccionada = categorias.find(c => c._id === categoria);
+      const subcategoriaSeleccionada = subcategorias.find(s => s._id === subcategoria);
+      const nombreCategoria = categoriaSeleccionada ? categoriaSeleccionada.nombre : '';
+      const nombreSubcategoria = subcategoriaSeleccionada ? subcategoriaSeleccionada.nombre : '';
 
+      const nuevoProducto = {
+        nombre,
+        categoria: nombreCategoria,
+        subcategoria: nombreSubcategoria,
+        precio,
+        costo,
+        stock,
+        comentarios,
+        usuario
+};
     fetch('https://vivosis.vercel.app/api/producto/', {
       method: 'POST',
       headers: {

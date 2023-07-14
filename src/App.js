@@ -14,12 +14,14 @@ import CrearPedido from './components/CrearPedido';
 import ActualizaMasivaPedidos from './components/ActualizaMasivaPedidos';
 import EnviosClientes from './components/EnviosClientes';
 import Stack from '@mui/material/Stack';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Register from './components/Register';
+import Logout from './components/Logout';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-
 import {
   AppBar,
   Toolbar,
+  Button,
   IconButton,
   Typography,
   List,
@@ -28,7 +30,7 @@ import {
   ListItemIcon,
   Drawer,
 } from '@mui/material';
-//import MenuIcon from '@mui/icons-material/Menu';
+
 import MenuSharpIcon from '@mui/icons-material/MenuSharp';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
@@ -38,6 +40,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
+import Login from './components/Login';
 
 function Home() {
   return (
@@ -58,6 +61,8 @@ function NoMatch() {
 }
 
 function App() {
+  const [authToken, setAuthToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
 
@@ -75,7 +80,24 @@ function App() {
 
   useEffect(() => {
     document.title = "Sistema de Pedidos";
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Si se encuentra un token almacenado, establece el estado de autenticación como logueado
+      setAuthToken(token);
+      setIsAuthenticated(true);
+    }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setAuthToken(null);
+    setIsAuthenticated(false);
+  };
+
+  const PrivateRoute = ({ element, ...props }) => {
+    return isAuthenticated ? element : <Navigate to="/login" replace />;
+  };
 
   return (
     <Router>
@@ -87,6 +109,18 @@ function App() {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Menu
           </Typography>
+          <div>
+            {isAuthenticated ? (
+              <>
+                <Button color="inherit" component={Link} to="/logout" onClick={handleLogout}>Logout</Button>
+              </>
+            ) : (
+              <>
+                <Button color="inherit" component={Link} to="/login">Login</Button>
+                <Button color="inherit" component={Link} to="/register">Register</Button>
+              </>
+            )}
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
@@ -152,20 +186,23 @@ function App() {
       </Drawer>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/verclientes" element={<VerClientes />} />
-        <Route path="/verproductos" element={<VerProductos />} />
-        <Route path="/veringresos" element={<VerIngresos />} />
-        <Route path="/verpedidos" element={<VerPedidos />} />
-        <Route path="/modificarcliente/:id" element={<ModificarCliente />} />
-        <Route path="/modificarproducto/:id" element={<ModificarProducto />} />
-        <Route path="/modificaringreso/:id" element={<ModificarIngreso />} />
-        <Route path="/modificarpedido/:id" element={<ModificarPedido />} />
-        <Route path="/crearcliente/" element={<CrearCliente />} />
-        <Route path="/crearproducto/" element={<CrearProducto />} />
-        <Route path="/crearingreso/" element={<CrearIngreso />} />
-        <Route path="/crearpedido/" element={<CrearPedido />} />
-        <Route path="/actualizamasivapedidos/" element={<ActualizaMasivaPedidos />} />
-        <Route path="/enviosclientes/" element={<EnviosClientes />} />
+        <Route path="/verclientes" element={<PrivateRoute element={<VerClientes />} />} />
+        <Route path="/verproductos" element={<PrivateRoute element={<VerProductos />} />} />
+        <Route path="/veringresos" element={<PrivateRoute element={<VerIngresos />} />} />
+        <Route path="/verpedidos" element={<PrivateRoute element={<VerPedidos />} />} />
+        <Route path="/modificarcliente/:id" element={<PrivateRoute element={<ModificarCliente />} />} />
+        <Route path="/modificarproducto/:id" element={<PrivateRoute element={<ModificarProducto />} />} />
+        <Route path="/modificaringreso/:id" element={<PrivateRoute element={<ModificarIngreso />} />} />
+        <Route path="/modificarpedido/:id" element={<PrivateRoute element={<ModificarPedido />} />} />
+        <Route path="/crearcliente/" element={<PrivateRoute element={<CrearCliente />} />} />
+        <Route path="/crearproducto/" element={<PrivateRoute element={<CrearProducto />} />} />
+        <Route path="/crearingreso/" element={<PrivateRoute element={<CrearIngreso />} />} />
+        <Route path="/crearpedido/" element={<PrivateRoute element={<CrearPedido />} />} />
+        <Route path="/actualizamasivapedidos/" element={<PrivateRoute element={<ActualizaMasivaPedidos />} />} />
+        <Route path="/enviosclientes/" element={<PrivateRoute element={<EnviosClientes />} />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
+        <Route path="/register" element={isAuthenticated ? <Navigate to="/" replace /> : <Register />} />
+        <Route path="/logout" element={isAuthenticated ? <Logout /> : <Navigate to="/login" replace />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Router>
