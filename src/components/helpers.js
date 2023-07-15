@@ -4,7 +4,7 @@
 export const actualizarStock = async (idArticulo, cantidad) => {
     try {
       // Hacer una solicitud al backend para actualizar el stock del artículo
-      const response = await fetch(`http://localhost:3001/api/articulo/${idArticulo}`, {
+      const response = await fetch(`http://vivosis.vercel.app/api/articulo/${idArticulo}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const actualizarStock = async (idArticulo, cantidad) => {
   
       if (stockActualizado) {
         // Hacer una solicitud al backend para eliminar el pedido
-        const response = await fetch(`http://localhost:3001/api/pedido/${idPedido}`, {
+        const response = await fetch(`http://vivosis.vercel.app/api/pedido/${idPedido}`, {
           method: 'DELETE',
         });
   
