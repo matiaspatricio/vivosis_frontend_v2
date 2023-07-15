@@ -17,14 +17,15 @@ import dayjs from 'dayjs';
 
 function CrearPedido() {
   const navigate = useNavigate();
-  const [id, setId] = useState('');
-  const [idCliente, setIdCliente] = useState('');
-  const [nombreCliente, setNombreCliente] = useState('');
+  
   const [clientes, setClientes] = useState([]);
-  const [idArticulo, setIdArticulo] = useState('');
-  const [nombreArticulo, setNombreArticulo] = useState('');
   const [articulos, setArticulos] = useState([]);
-  const [cantidad, setCantidad] = useState(0);
+
+  const [idCliente, setIdCliente] = useState('');
+  const [nombreCliente, setNombreCliente] = useState('');  
+  const [idArticulo, setIdArticulo] = useState('');
+  const [nombreArticulo, setNombreArticulo] = useState('');  
+  const [cantidad, setCantidad] = useState(1);
   const [precio, setPrecio] = useState(0);
   const [total, setTotal] = useState(0);
   const [costo, setCosto] = useState(0);
@@ -32,13 +33,16 @@ function CrearPedido() {
   const [estadoPago, setEstadoPago] = useState('PENDIENTE');
   const [fechaEntrega, setFechaEntrega] = useState(null);
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
-  //const username = localStorage.getItem('username',username);
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));  
   
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
   const [valorLocalidad, setValorLocalidad] = useState('');
+
+  const [listaClientes, setListaClientes] = useState('');
+
+
 
   const listaLocalidades = [
     { value: '', label: 'VACIO' },
@@ -60,7 +64,8 @@ function CrearPedido() {
     fetch('https://vivosis.vercel.app/api/cliente/getallclientes')
       .then(response => response.json())
       .then(data => {
-        setClientes(data);
+        const sortedClientes = data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        setClientes(sortedClientes);
       })
       .catch(error => {
         console.log('Error al obtener los clientes:', error);
@@ -92,13 +97,6 @@ function CrearPedido() {
         console.log('Error al obtener el precio del producto:', error);
       });
   };
-
-  
-
-  const handleIdChange = event => {
-    setId(event.target.value);
-  };
-
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -117,10 +115,7 @@ function CrearPedido() {
     }
   };
 
-  const handleNombreClienteChange = event => {
-    setNombreCliente(event.target.value);
-  };
-
+  
   const handleNombreArticuloChange = (event, value) => {
     if (value) {
       setIdArticulo(value._id);
@@ -132,52 +127,37 @@ function CrearPedido() {
       setPrecio(0);
     }
   };
-
   const handleCantidadChange = event => {
     setCantidad(event.target.value);
   };
-
   const handlePrecioChange = event => {
     setPrecio(event.target.value);
   };
-
   const handleTotalChange = event => {
     setTotal(event.target.value);
   };
-
   const handleCostoChange = event => {
     setCosto(event.target.value);
   };
-
-  const handleEstadoChange = event => {
-    setEstadoPedido(event.target.value);
-  };
-
   const handleFechaEntregaChange = newValue => {
     setFechaEntrega(newValue);
   };
-
   const handleComentariosChange = event => {
     setComentarios(event.target.value);
   };
-
-
-
   const handleLocalidadChange = (event, value) => {
     setValorLocalidad(value ? value.value : ''); // Guardar el valor seleccionado en valorLocalidad
   };
-
-  const limpiarFormulario = () => {
-    setId('');
+  const limpiarFormulario = () => {    
     setIdCliente('');
     setNombreCliente('');
     setIdArticulo('');
     setNombreArticulo('');
-    setCantidad(0);
+    setCantidad(1);
     setPrecio(0);
     setTotal(0);
     setCosto(0);
-    setEstadoPedido('Creado');
+    
     setFechaEntrega(null);
     setComentarios('');
     
@@ -213,7 +193,7 @@ function CrearPedido() {
   };
 
   const handleGuardar = () => {
-    if (nombreCliente.trim() === '' || nombreArticulo.trim() === '' || cantidad.trim() === '') {
+    if (nombreCliente.trim() === '' || nombreArticulo.trim() === '' || cantidad === 0) {
       setMensaje('El Articulo y cantidad son obligatorios');
       setMensajeError(true);
       setMostrarMensaje(true);
@@ -279,10 +259,12 @@ function CrearPedido() {
         <CardContent>
           <h2>Crear Pedido</h2>
           <form>
+
             <Autocomplete
+              disablePortal
               options={clientes}
-              getOptionLabel={option => (option.nombre ? option.nombre.toLowerCase() : '')}
-              value={nombreCliente ? { _id: idCliente, nombre: nombreCliente } : null}
+              getOptionLabel={option => (option.nombre ? option.nombre : '')}
+              value={nombreCliente ? { id: idCliente, nombre: nombreCliente } : null}
               onChange={handleIdClienteChange}
               renderInput={params => (
                 <TextField
@@ -294,10 +276,9 @@ function CrearPedido() {
               )}
               enabled
             />
-
             <Autocomplete
               options={articulos}
-              getOptionLabel={option => (option.nombre ? option.nombre.toLowerCase() : '')}
+              getOptionLabel={option => (option.nombre ? option.nombre : '')}
               value={nombreArticulo ? { id: idArticulo, nombre: nombreArticulo } : null}
               onChange={handleNombreArticuloChange}
               renderInput={params => (
@@ -310,7 +291,6 @@ function CrearPedido() {
               )}
               enabled
             />
-
             <TextField
               fullWidth
               label="Cantidad"
@@ -352,26 +332,14 @@ function CrearPedido() {
               margin="dense"
               disabled
             />
-            <br />
-            <TextField
-              fullWidth
-              label="Estado"
-              value={estadoPedido}
-              onChange={handleEstadoChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            <br />            
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-              
+              <DatePicker              
                 label="Fecha de entrega"
                 value={fechaEntrega}
                 onChange={handleFechaEntregaChange}
                 renderInput={params => (
-                  <TextField
-                    
+                  <TextField                    
                     {...params}
                     margin="dense"
                     variant="outlined"
