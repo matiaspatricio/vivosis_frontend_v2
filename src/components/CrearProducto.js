@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,6 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 function CrearProducto() {
+  const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [categoria, setCategoria] = useState('');
   const [subcategoria, setSubcategoria] = useState('');
@@ -18,7 +19,7 @@ function CrearProducto() {
   const [costo, setCosto] = useState('');
   const [stock, setStock] = useState('');
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('ADMIN');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [categorias, setCategorias] = useState([]);
   const [subcategorias, setSubcategorias] = useState([]);
@@ -71,9 +72,7 @@ function CrearProducto() {
     setComentarios(event.target.value);
   };
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
+
 
   const limpiarFormulario = () => {
     setNombre('');
@@ -83,7 +82,7 @@ function CrearProducto() {
     setCosto('');
     setStock('');
     setComentarios('');
-    setUsuario('');
+    
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -132,6 +131,9 @@ function CrearProducto() {
         setMensajeError(false);
         setMostrarMensaje(true);
         limpiarFormulario();
+        setTimeout(() => {
+          navigate(`/verproductos`);
+        }, 800);
       })
       .catch(error => {
         console.log('Error al crear el producto:', error);
@@ -228,16 +230,7 @@ function CrearProducto() {
               multiline
             />
             <br />
-            <TextField
-              fullWidth
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            
           </form>
         </CardContent>
         <CardActions>

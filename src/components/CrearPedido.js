@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
@@ -16,6 +16,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 
 function CrearPedido() {
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const [idCliente, setIdCliente] = useState('');
   const [nombreCliente, setNombreCliente] = useState('');
@@ -31,7 +32,9 @@ function CrearPedido() {
   const [estadoPago, setEstadoPago] = useState('PENDIENTE');
   const [fechaEntrega, setFechaEntrega] = useState(null);
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('ADMIN');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
+  //const username = localStorage.getItem('username',username);
+  
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
@@ -89,6 +92,8 @@ function CrearPedido() {
         console.log('Error al obtener el precio del producto:', error);
       });
   };
+
+  
 
   const handleIdChange = event => {
     setId(event.target.value);
@@ -156,9 +161,7 @@ function CrearPedido() {
     setComentarios(event.target.value);
   };
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
+
 
   const handleLocalidadChange = (event, value) => {
     setValorLocalidad(value ? value.value : ''); // Guardar el valor seleccionado en valorLocalidad
@@ -177,7 +180,7 @@ function CrearPedido() {
     setEstadoPedido('Creado');
     setFechaEntrega(null);
     setComentarios('');
-    setUsuario('');
+    
     setValorLocalidad('');
   };
 
@@ -218,6 +221,8 @@ function CrearPedido() {
     }
 
     const formattedDate = dayjs().format('DD/MM/YYYY');
+    
+
     const nuevoPedido = {
       fecha: formattedDate,
       id_cliente: idCliente,
@@ -252,6 +257,10 @@ function CrearPedido() {
         actualizarStockProducto(idArticulo, cantidad); // Actualizar el stock del producto
 
         limpiarFormulario();
+
+        /*setTimeout(() => {
+          navigate(`/verpedidos`);
+        }, 800);*/
       })
       .catch(error => {
         console.log('Error al crear el pedido:', error);
@@ -398,15 +407,7 @@ function CrearPedido() {
               rows={4}
             />
             <br />
-            <TextField
-              fullWidth
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
+            
           </form>
         </CardContent>
         <CardActions>

@@ -30,7 +30,7 @@ function ModificarCliente() {
   const [direccion, setDireccion] = useState('');
   const [localidad, setLocalidad] = useState('');
   const [estado, setEstado] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [guardarHabilitado, setGuardarHabilitado] = useState(true);  
@@ -75,8 +75,7 @@ function ModificarCliente() {
     setTelefono(cliente.telefono || '');
     setDireccion(cliente.direccion || '');
     setLocalidad(cliente.localidad || '');
-    setEstado(cliente.estado || '');
-    setUsuario(cliente.usuario || '');
+    setEstado(cliente.estado || '');    
     setLocalidadesDialog(listaLocalidades);
   }, [cliente]);
 
@@ -131,9 +130,7 @@ function ModificarCliente() {
     setEstado(event.target.value);
   };
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
+
 
   const handleGuardar = () => {
     setGuardarHabilitado(false);
@@ -158,7 +155,11 @@ function ModificarCliente() {
         console.log('Cliente modificado:', data);
         setMensaje('El cliente ha sido actualizado');
         setMostrarMensaje(true);
-        navigate(`/ModificarCliente/${id}`);
+        
+        setTimeout(() => {
+          navigate(`/verclientes`);
+        }, 800);
+        
       })
       .catch(error => {
         console.log('Error al modificar el cliente:', error);
@@ -231,15 +232,7 @@ function ModificarCliente() {
               </Select>
             </FormControl>
             <br />
-            <TextField
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            
           </form>
         </CardContent>
         <CardActions style={{ justifyContent: 'center' }}>

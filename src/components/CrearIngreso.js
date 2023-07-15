@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -14,6 +14,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 
 function CrearIngreso() {
+  const navigate = useNavigate();
   const [fecha, setFecha] = useState('');
   const [idArticulo, setIdArticulo] = useState('');
   const [nombreArticulo, setNombreArticulo] = useState('');
@@ -22,7 +23,7 @@ function CrearIngreso() {
   const [costoUnitario, setCostoUnitario] = useState('');
   const [precioVenta, setPrecioVenta] = useState('');
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [productos, setProductos] = useState([]);
@@ -92,9 +93,6 @@ function CrearIngreso() {
     setComentarios(event.target.value);
   };
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
 
   const calcularTotal = () => {
     const costoUnitarioFloat = parseFloat(costoUnitario);
@@ -114,7 +112,7 @@ function CrearIngreso() {
     setCostoUnitario('');
     setPrecioVenta('');
     setComentarios('');
-    setUsuario('');
+    
   };
 
   const handleFechaIngresoChange = newValue => {
@@ -143,7 +141,7 @@ function CrearIngreso() {
       total: cantidad * costoUnitario,      
       motivo,
       comentarios,
-      usuario
+      usuario: usuario
 
     };
     fetch('https://vivosis.vercel.app/api/ingreso/', {
@@ -188,6 +186,9 @@ function CrearIngreso() {
               .then(response => response.json())
               .then(updatedProducto => {
                 console.log('Producto actualizado:', updatedProducto);
+                setTimeout(() => {
+                  navigate(`/veringresos`);
+                }, 800);
               })
               .catch(error => {
                 console.log('Error al actualizar el producto:', error);
@@ -325,17 +326,7 @@ function CrearIngreso() {
               variant="outlined"
               margin="dense"
             />
-            <br />
-            <TextField
-              fullWidth
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            <br />            
           </form>
         </CardContent>
         <CardActions style={{ justifyContent: 'center' }}>

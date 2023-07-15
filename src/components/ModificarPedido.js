@@ -47,7 +47,7 @@ function ModificarPedido() {
   const [estadoPedido, setEstadoPedido] = useState('');
   const [comentarios, setComentarios] = useState('');
   const [fechaEntrega, setFechaEntrega] = useState(null); // Nuevo estado para la fecha de entrega
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [guardarHabilitado, setGuardarHabilitado] = useState(true);  
@@ -78,7 +78,7 @@ function ModificarPedido() {
     setEstadoPedido(pedido.estado_pedido || '');
     setComentarios(pedido.comentarios || '');
     setFechaEntrega(pedido.fecha_entrega || ''); // Nuevo estado para la fecha de entrega
-    setUsuario(pedido.usuario || '');
+    
   }, [pedido]);
 
   useEffect(() => {
@@ -145,9 +145,7 @@ function ModificarPedido() {
     setFechaEntrega(newValue);
   }; // Nuevo manejador de cambio para la fecha de entrega
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
+
 
   const actualizarStock = (cantidadOriginal, nuevaCantidad) => {
     // Obtener el producto correspondiente al artículo del pedido
@@ -226,8 +224,11 @@ function ModificarPedido() {
 .then(data => {
         setMensaje('El pedido ha sido actualizado');
         setMostrarMensaje(true);
-        navigate(`/ModificarPedido/${id}`);
+        //navigate(`/ModificarPedido/${id}`);
         actualizarStock(cantidadOriginal, cantidad); // Actualizar el stock después de guardar los cambios en el pedido
+        setTimeout(() => {
+          navigate(`/verpedidos`);
+        }, 800);
       })
       .catch(error => {
         console.log('Error al modificar el pedido:', error);
@@ -342,15 +343,7 @@ function ModificarPedido() {
             />
             
             <br />            
-            <TextField
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            
           </form>
           <Dialog open={openDialog} onClose={handleDialogClose}>
             <DialogTitle>Seleccionar Estado</DialogTitle>
@@ -384,7 +377,7 @@ function ModificarPedido() {
             </Button>
           </Box>
           <Box sx={{ mx: 1 }}>
-            <Button variant="contained" component={Link} to="/verpedidos">
+            <Button variant="contained" color='error' component={Link} to="/verpedidos">
               Atrás
             </Button>
           </Box>

@@ -22,7 +22,7 @@ function ModificarIngreso() {
   const [costoUnitario, setCostoUnitario] = useState(0);
   const [precioVenta, setPrecioVenta] = useState(0);
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [idArticulo, setIdArticulo] = useState('');
@@ -49,8 +49,7 @@ function ModificarIngreso() {
     setMotivo(ingreso.motivo || '');
     setCostoUnitario(ingreso.costo_unitario || 0);
     setPrecioVenta(ingreso.precio || 0);
-    setComentarios(ingreso.comentarios || '');
-    setUsuario(ingreso.usuario || '');
+    setComentarios(ingreso.comentarios || '');    
   }, [ingreso]);
 
   useEffect(() => {
@@ -109,9 +108,6 @@ function ModificarIngreso() {
     setComentarios(event.target.value);
   };
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
 
   const handleGuardar = () => {
     setGuardarHabilitado(false);
@@ -167,7 +163,11 @@ function ModificarIngreso() {
               .then(response => response.json())
               .then(updatedProducto => {
                 console.log('Producto actualizado:', updatedProducto);
-                navigate(`/ModificarIngreso/${ingreso._id}`);
+                                
+                setTimeout(() => {
+                  navigate(`/veringresos`);
+                }, 800);
+
               })
               .catch(error => {
                 console.log('Error al actualizar el producto:', error);
@@ -273,15 +273,7 @@ function ModificarIngreso() {
               disabled={!guardarHabilitado} // Nuevo atributo disabled
             />
             <br />
-            <TextField
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled={!guardarHabilitado} // Nuevo atributo disabled
-            />
-            <br />
+            
           </form>
         </CardContent>
         <CardActions style={{ justifyContent: 'center' }}>
@@ -291,7 +283,7 @@ function ModificarIngreso() {
             </Button>
           </Box>
           <Box sx={{ mx: 1 }}>
-            <Button variant="contained" component={Link} to="/veringresos">
+            <Button variant="contained" color='error' component={Link} to="/veringresos">
               Atrás
             </Button>
           </Box>

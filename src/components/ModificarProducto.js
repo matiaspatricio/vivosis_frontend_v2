@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -15,6 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import MenuItem from '@mui/material/MenuItem';
 
 function ModificarProducto() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [producto, setProducto] = useState({});
   const [nombre, setNombre] = useState('');
@@ -30,7 +31,7 @@ function ModificarProducto() {
   const [costo, setCosto] = useState(0);
   const [stock, setStock] = useState(0);
   const [comentarios, setComentarios] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -63,7 +64,7 @@ function ModificarProducto() {
     setCosto(producto.costo || 0);
     setStock(producto.stock || 0);
     setComentarios(producto.comentarios || '');
-    setUsuario(producto.usuario || '');
+    
   }, [producto]);
 
   const handleNombreChange = event => {
@@ -95,9 +96,7 @@ function ModificarProducto() {
     setComentarios(event.target.value);
   };
 
-  const handleUsuarioChange = event => {
-    setUsuario(event.target.value);
-  };
+
 
   const handleGuardar = () => {
     setGuardarHabilitado(false);
@@ -123,6 +122,9 @@ function ModificarProducto() {
       .then(data => {
         setMensaje('El producto ha sido actualizado');
         setMostrarMensaje(true);
+        setTimeout(() => {
+          navigate(`/verproductos`);
+        }, 800);
       })
       .catch(error => {
         console.log('Error al modificar el producto:', error);
@@ -250,16 +252,7 @@ function ModificarProducto() {
               multiline
             />
             <br />
-            <TextField
-              fullWidth
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"              
-              disabled
-            />
-            <br />
+            
           </form>
         </CardContent>
         <CardActions style={{ justifyContent: 'center' }}>
@@ -269,7 +262,7 @@ function ModificarProducto() {
             </Button>
           </Box>
           <Box sx={{ mx: 1 }}>
-            <Button variant="contained" component={Link} to="/verproductos">
+            <Button variant="contained" color='error' component={Link} to="/verproductos">
               Atrás
             </Button>
           </Box>

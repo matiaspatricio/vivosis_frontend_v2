@@ -89,6 +89,8 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
+
     setAuthToken(null);
     setIsAuthenticated(false);
   };
@@ -142,44 +144,56 @@ function App() {
               </ListItemIcon>
               <ListItemText primary="PRODUCTOS" />
             </ListItem>
+
             <ListItem button onClick={handleServicesToggle}>
               <ListItemIcon>
                 <MonetizationOnIcon />
               </ListItemIcon>
-              <ListItemText primary="INGRESOS" />
+              <ListItemText primary="PEDIDOS" />
               {servicesOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItem>
+
             <Collapse in={servicesOpen} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem button component={Link} to="/veringresos" onClick={handleDrawerClose} style={{ paddingLeft: 32 }}>
+              <ListItem button component={Link} to="/crearpedido" onClick={handleDrawerClose}style={{ paddingLeft: 32 }}>
+                <ListItemIcon>
+                  <MonetizationOnIcon />
+                </ListItemIcon>
+                <ListItemText primary="CREAR PEDIDO" />
+              </ListItem>
+
+                <ListItem button component={Link} to="/verpedidos" onClick={handleDrawerClose}style={{ paddingLeft: 32 }}>
                   <ListItemIcon>
                     <MonetizationOnIcon />
                   </ListItemIcon>
-                  <ListItemText primary="INGRESOS" />
+                  <ListItemText primary="VER PEDIDOS" />
+                </ListItem>           
+
+                <ListItem button component={Link} to="/actualizamasivapedidos" onClick={handleDrawerClose}style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="ACTUALIZAR PEDIDOS DE CLIENTES" />
                 </ListItem>
+
+                <ListItem button component={Link} to="/enviosclientes" onClick={handleDrawerClose}style={{ paddingLeft: 32 }}>
+                  <ListItemIcon>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="ENVIOS TOTALES WHATSAPP" />
+                </ListItem>
+                
                 {/* Agrega más submenús aquí */}
               </List>
             </Collapse>
-            <ListItem button component={Link} to="/verpedidos" onClick={handleDrawerClose}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="PEDIDOS" />
-            </ListItem>
-
-            <ListItem button component={Link} to="/actualizamasivapedidos" onClick={handleDrawerClose}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="ACTUALIZAR PEDIDOS DE CLIENTES" />
-            </ListItem>
-
-            <ListItem button component={Link} to="/enviosclientes" onClick={handleDrawerClose}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="ENVIOS TOTALES WHATSAPP" />
-            </ListItem>
+            <ListItem button component={Link} to="/veringresos" onClick={handleDrawerClose} >
+                  <ListItemIcon>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="INGRESOS" />
+                </ListItem>
+            
+            
             {/* Agrega más elementos de menú aquí */}
           </List>
         </Drawer>

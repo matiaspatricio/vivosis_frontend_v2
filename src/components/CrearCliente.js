@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -26,12 +26,13 @@ function CrearCliente() {
     { value: 'VARELA', label: 'VARELA' }
   ];
 
+  const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
   const [direccion, setDireccion] = useState('');
   const [localidad, setLocalidad] = useState('');
   const [estado, setEstado] = useState('ACTIVO');
-  const [usuario, setUsuario] = useState('admin');
+  const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
@@ -56,17 +57,14 @@ function CrearCliente() {
     setEstado(event.target.value);
   };
 
-  const handleUsuarioChange = (event) => {
-    setUsuario(event.target.value);
-  };
 
   const limpiarFormulario = () => {
     setNombre('');
     setTelefono('');
     setDireccion('');
     setLocalidad('');
-    setEstado('Activo');
-    setUsuario('admin');
+    setEstado('ACTIVO');
+    
   };
 
   const handleGuardar = () => {
@@ -98,6 +96,9 @@ function CrearCliente() {
         setMensajeError(false);
         setMostrarMensaje(true);
         limpiarFormulario();
+        setTimeout(() => {
+          navigate(`/verclientes`);
+        }, 800);
       })
       .catch((error) => {
         console.log('Error al crear el cliente:', error);
@@ -176,17 +177,7 @@ function CrearCliente() {
               margin="dense"
               disabled
             />
-            <br />
-            <TextField
-              fullWidth 
-              label="Usuario"
-              value={usuario}
-              onChange={handleUsuarioChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            <br />            
           </form>
         </CardContent>
         <CardActions>
