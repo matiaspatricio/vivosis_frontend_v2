@@ -20,8 +20,11 @@ const AuthForm = () => {
       });
 
       const { token } = response.data;
-      console.log("Token de inicio de sesión:", token);
+      const { username } = response.data.user;
+      //console.log("Token de inicio de sesión:", token);
+      //console.log("username:", username);
       localStorage.setItem('token', token); // Guardar el token en el localStorage
+      localStorage.setItem('username',username)
       //Cookies.set('token', token, { expires: 7 }); // La cookie expirará después de 7 días
       //const token = Cookies.get('token'); // Obtener el token de la cookie
 
