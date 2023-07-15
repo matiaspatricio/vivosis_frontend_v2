@@ -14,7 +14,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://vivosis.vercel.app/api/auth/register", {
+      await axios.post("https://vivosis.vercel.app/api/auth/register", {
         username,
         nombre,
         apellido,

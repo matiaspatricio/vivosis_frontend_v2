@@ -14,7 +14,7 @@ const AuthForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://vivosis.vercel.app/api/auth/login", {
+      const response = await axios.post("https://vivosis.vercel.app/api/auth/login", {
         email,
         password,
       });
