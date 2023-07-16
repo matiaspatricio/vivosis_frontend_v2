@@ -172,7 +172,7 @@ function ActualizaMasivaPedidos() {
           <Typography variant="h5" component='h4' gutterBottom sx={{ textAlign: 'center', mt: 3, mb: 3 }}>Actualizar todos los pedidos (pendientes) de clientes</Typography>
           <Box display="flex" justifyContent="center" alignItems="center" >
             <Box width={800}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              
                 <Autocomplete
                   multiple
                   options={clientes}
@@ -193,19 +193,21 @@ function ActualizaMasivaPedidos() {
                     control={<Switch checked={checkFechaEntrega} onChange={handleCheckFechaEntregaChange} />}
                     label="Actualizar"
                   />
-                  <DatePicker sx={{ m: 1, width: 250 }}
-                    label="Fecha de entrega"
-                    value={selectedFechaEntrega}
-                    onChange={handleFechaEntregaChange}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        margin="dense"
-                        variant="outlined"
-                        disabled={!checkFechaEntrega}
-                      />
-                    )}
-                  />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker sx={{ m: 1, width: 250 }}
+                      label="Fecha de entrega"
+                      value={selectedFechaEntrega}
+                      onChange={handleFechaEntregaChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          margin="dense"
+                          variant="outlined"
+                          disabled={!checkFechaEntrega}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
                 </div>
                 <br/>
                 <div>
@@ -272,7 +274,7 @@ function ActualizaMasivaPedidos() {
                   </Select>
                 </div>
                 <br /><br /><br />
-              </LocalizationProvider>
+              
             </Box>
           </Box>
         </CardContent>

@@ -21,6 +21,8 @@ import MuiAlert from '@mui/material/Alert';
 import { Typography } from '@mui/material';
 import { Box, Grid } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
+import { format } from 'date-fns';
+
 
 const useStyles = makeStyles({
   root: {
@@ -174,11 +176,6 @@ function VerPedidos() {
     setFilterNombreArticuloValue(value);
   };
 
-  const formatDate = date => {
-    const formattedDate = new Date(date).toLocaleDateString('es-AR');
-    return formattedDate;
-  };
-
   const filteredPedidos = pedidos.filter(pedido =>
     pedido && pedido.nombre_cliente && pedido.nombre_cliente.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -200,6 +197,7 @@ function VerPedidos() {
     : filteredPedidosByNombreCliente;
 
   const columns = [
+    { field: '_id', headerName: 'Id', flex: 0.5 },
     { field: 'fecha', headerName: 'Fecha', flex: 0.5 },
     { field: 'nombre_cliente', headerName: 'Cliente', flex: 0.5 },
     { field: 'localidad', headerName: 'Localidad', flex: 0.5 },
@@ -306,6 +304,7 @@ function VerPedidos() {
               />
             </Grid>
             <Grid item xs={12} className={classes.filtersContainer}>
+              
               <TextField
                 label="Buscar"
                 variant="outlined"
