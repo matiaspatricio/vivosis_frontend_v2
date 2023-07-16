@@ -59,9 +59,11 @@ function ModificarPedido() {
       .then(data => {
         setPedido(data);
         console.log(data);
+        console.log(data.fecha)
       })
       .catch(error => {
         console.log('Error al cargar el pedido:', error);
+        
       });
   }, [id]);
 

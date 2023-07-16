@@ -73,11 +73,15 @@ function VerPedidos() {
     fetch('https://vivosis.vercel.app/api/pedido/getallpedidos')
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const pedidosConId = data.map(pedido => ({
           id: pedido._id,
           ...pedido,
           fecha_entrega: pedido.fecha_entrega,
+          fecha: pedido.fecha,
+
         }));
+        console.log(pedidosConId)
         setPedidos(pedidosConId);
         setLoading(false);
       })
@@ -198,7 +202,7 @@ function VerPedidos() {
 
   const columns = [
     { field: '_id', headerName: 'Id', flex: 0.5 },
-    { field: 'fecha', headerName: 'Fecha', flex: 0.5 },
+    { field: 'fecha', headerName: 'Fecha', flex: 1 },
     { field: 'nombre_cliente', headerName: 'Cliente', flex: 0.5 },
     { field: 'localidad', headerName: 'Localidad', flex: 0.5 },
     { field: 'nombre_articulo', headerName: 'Artículo', flex: 0.7 },

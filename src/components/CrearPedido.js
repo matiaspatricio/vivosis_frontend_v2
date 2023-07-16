@@ -13,7 +13,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import dayjs from 'dayjs';
+import { format, compareAsc } from 'date-fns'
 
 function CrearPedido() {
   const navigate = useNavigate();
@@ -199,12 +199,12 @@ function CrearPedido() {
       setMostrarMensaje(true);
       return;
     }
-
-    const formattedDate = dayjs().format('DD/MM/YYYY');
-    
+    const fechaHoy = new Date();
+    const formattedFecha = fechaHoy.toUTCString();
+    console.log("FechaEntrega: ",fechaEntrega);
 
     const nuevoPedido = {
-      fecha: formattedDate,
+      fecha: formattedFecha,
       id_cliente: idCliente,
       nombre_cliente: nombreCliente,
       id_articulo: idArticulo,
@@ -215,7 +215,7 @@ function CrearPedido() {
       costo: costo,
       estado_pedido: estadoPedido,
       estado_pago: estadoPago,
-      fecha_entrega: fechaEntrega ? fechaEntrega.format('DD/MM/YYYY') : null,
+      fecha_entrega: fechaEntrega ? new Date(fechaEntrega) : null,
       comentarios: comentarios,
       usuario: usuario,
       localidad: valorLocalidad // Usar valorLocalidad en lugar de localidad
