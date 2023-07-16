@@ -127,18 +127,44 @@ function CrearPedido() {
       setPrecio(0);
     }
   };
+  
   const handleCantidadChange = event => {
-    setCantidad(event.target.value);
+    const value = parseInt(event.target.value);
+    if (isNaN(value) || value < 0) {
+      setCantidad(0);
+    } else {
+      setCantidad(value);
+    }
   };
+  
   const handlePrecioChange = event => {
-    setPrecio(event.target.value);
+    const value = parseFloat(event.target.value);
+    if (isNaN(value) || value < 0) {
+      setPrecio(0);
+    } else {
+      setPrecio(value);
+    }
   };
+  
   const handleTotalChange = event => {
-    setTotal(event.target.value);
+    const value = parseFloat(event.target.value);
+    if (isNaN(value) || value < 0) {
+      setTotal(0);
+    } else {
+      setTotal(value);
+    }
   };
+  
   const handleCostoChange = event => {
-    setCosto(event.target.value);
+    const value = parseFloat(event.target.value);
+    if (isNaN(value) || value < 0) {
+      setCosto(0);
+    } else {
+      setCosto(value);
+    }
   };
+  
+
   const handleFechaEntregaChange = newValue => {
     setFechaEntrega(newValue);
   };
@@ -211,7 +237,7 @@ function CrearPedido() {
       nombre_articulo: nombreArticulo,
       cantidad: cantidad,
       precio: precio,
-      total: total,
+      total: total ? total : 0,
       costo: costo,
       estado_pedido: estadoPedido,
       estado_pago: estadoPago,
@@ -291,6 +317,7 @@ function CrearPedido() {
               )}
               enabled
             />
+            <br />    
             <TextField
               fullWidth
               label="Cantidad"
@@ -300,7 +327,7 @@ function CrearPedido() {
               variant="outlined"
               margin="dense"
             />
-            <br />
+            <br />    
             <TextField
               fullWidth
               label="Precio"
@@ -310,7 +337,7 @@ function CrearPedido() {
               variant="outlined"
               margin="dense"
             />
-            <br />
+              <br />    
             <TextField
               fullWidth
               label="Total"
@@ -321,7 +348,7 @@ function CrearPedido() {
               margin="dense"
               disabled
             />
-            <br />
+            <br />    
             <TextField
               fullWidth
               label="Costo"

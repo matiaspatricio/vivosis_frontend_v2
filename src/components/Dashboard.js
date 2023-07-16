@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Typography, Card, CardContent, Grid } from "@mui/material";
 import { startOfToday, subDays, format } from 'date-fns';
+import { getPedidosPendientes, getPedidosMes } from "./api/pedido/pedido";
 
 const Dashboard = () => {
   const [pedidosPendientes, setPedidosPendientes] = useState([]);
@@ -12,17 +13,30 @@ const Dashboard = () => {
   const [totalUltimos7Dias, setTotalUltimos7Dias] = useState(0);
   const [fechaHoy, setFechaHoy] = useState("");
   const [totalAyer, setTotalAyer] = useState(0);
+  const [montoTotal, setMontoTotal] = useState(0);
+
 
   useEffect(() => {
-    fetch("https://vivosis.vercel.app/api/pedido/getPedidosPendientes")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+
+        const pedidosMes = await getPedidosMes();
+         setMontoTotal(pedidosMes.reduce((total, pedido) => {
+          //console.log("Pedido:", pedido);
+          //console.log("Total acumulado:", total);
+          //console.log("Total del pedido:", pedido.total);
+          return total + pedido.total;
+        }, 0));
+        console.log("Monto total:", montoTotal);
+
+
+        const data = await getPedidosPendientes();
         setPedidosPendientes(data.filter((pedido) => pedido.estado_pedido === "PENDIENTE"));
         setPedidosPreparados(data.filter((pedido) => pedido.estado_pedido === "PREPARADO"));
+
         setClientesConPedidosPendientes(Array.from(new Set(data.map((pedido) => pedido.nombre_cliente))));
-        setClientesConPedidosPreparados(
-          Array.from(new Set(data.filter((pedido) => pedido.estado_pedido === "PREPARADO").map((pedido) => pedido.nombre_cliente)))
-        );
+        setClientesConPedidosPreparados(Array.from(new Set(data.filter((pedido) => pedido.estado_pedido === "PREPARADO").map((pedido) => pedido.nombre_cliente))));
+        
         setDineroPendiente(data.filter((pedido) => pedido.estado_pago === "PENDIENTE").reduce((total, pedido) => total + pedido.total, 0));
         
         const today = startOfToday();
@@ -54,12 +68,13 @@ const Dashboard = () => {
         
         const formattedToday = format(today, "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX '(Coordinated Universal Time)'");
         setFechaHoy(formattedToday);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log("Error al cargar los pedidos:", error);
-      });
-  }, []);
+      }
+    };
 
+    fetchData();
+  }, []);
   return (
     <Grid container spacing={2} mt={5}>
       <Grid item xs={12} md={6}>
@@ -142,6 +157,17 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </Grid>
+      <Grid item xs={12} md={6}>
+  <Card>
+    <CardContent>
+      <Typography variant="h6" gutterBottom>
+        Monto total de pedidos del mes
+      </Typography>
+      <Typography variant="h4">${montoTotal}</Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
     </Grid>
   );
 };
