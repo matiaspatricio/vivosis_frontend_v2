@@ -23,3 +23,9 @@ export const getPedidosAyer = async () => {
     const data = await response.json();
     return data;
   };
+
+  export const getPedidosHoy = async () => {
+    const response = await fetch(`${API_URL}/getPedidosHoy`);
+    const data = await response.json();
+    return data;
+  }

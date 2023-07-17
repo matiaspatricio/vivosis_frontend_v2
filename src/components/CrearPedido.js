@@ -226,8 +226,10 @@ function CrearPedido() {
       return;
     }
     const fechaHoy = new Date();
-    const formattedFecha = fechaHoy.toUTCString();
-    console.log("FechaEntrega: ",fechaEntrega);
+    console.log("FechaHoy: ", fechaHoy);
+    const formattedFecha = fechaHoy.toISOString();
+    console.log("formattedFecha: ", formattedFecha);
+    
 
     const nuevoPedido = {
       fecha: formattedFecha,
@@ -246,6 +248,8 @@ function CrearPedido() {
       usuario: usuario,
       localidad: valorLocalidad // Usar valorLocalidad en lugar de localidad
     };
+
+    console.log('nuevoPedido:', nuevoPedido)
 
     fetch('https://vivosis.vercel.app/api/pedido/', {
       method: 'POST',
