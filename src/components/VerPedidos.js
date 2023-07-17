@@ -21,6 +21,8 @@ import MuiAlert from '@mui/material/Alert';
 import { Typography } from '@mui/material';
 import { Box, Grid } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
+import { utcToZonedTime, format } from 'date-fns-tz';
+import { format as formatDate } from 'date-fns';
 
 
 
@@ -77,9 +79,8 @@ function VerPedidos() {
         const pedidosConId = data.map(pedido => ({
           id: pedido._id,
           ...pedido,
-          fecha_entrega: pedido.fecha_entrega,
-          fecha: pedido.fecha,
-
+          fecha_entrega:  pedido.fecha_entrega ? formatFecha(pedido.fecha_entrega): null,
+          fecha: formatFecha(pedido.fecha),
         }));
         console.log(pedidosConId)
         setPedidos(pedidosConId);
@@ -90,6 +91,14 @@ function VerPedidos() {
         setLoading(false);
       });
   }, [refreshCount]);
+
+  const formatFecha = fecha => {
+    const fechaUtc = new Date(fecha);
+    const formattedFecha = utcToZonedTime(fechaUtc, 'America/Argentina/Buenos_Aires');
+    const fechaFormateada = formatDate(formattedFecha, 'dd/MM/yyyy HH:mm:ss');
+    //const fechaFormateada = formattedFecha
+    return fechaFormateada;
+  };
 
   useEffect(() => {
     const nombreClienteOptions = Array.from(new Set(pedidos.map(pedido => pedido.nombre_cliente)));
@@ -202,7 +211,7 @@ function VerPedidos() {
 
   const columns = [
     { field: '_id', headerName: 'Id', flex: 0.5 },
-    { field: 'fecha', headerName: 'Fecha', flex: 1 },
+    { field: 'fecha', headerName: 'Fecha', flex: 2.5 },
     { field: 'nombre_cliente', headerName: 'Cliente', flex: 0.5 },
     { field: 'localidad', headerName: 'Localidad', flex: 0.5 },
     { field: 'nombre_articulo', headerName: 'Artículo', flex: 0.7 },

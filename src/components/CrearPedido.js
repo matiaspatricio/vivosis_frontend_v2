@@ -13,7 +13,8 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { format, compareAsc } from 'date-fns'
+import { format, compareAsc  } from 'date-fns'
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime'
 
 function CrearPedido() {
   const navigate = useNavigate();
@@ -225,10 +226,15 @@ function CrearPedido() {
       setMostrarMensaje(true);
       return;
     }
-    const fechaHoy = new Date();
-    console.log("FechaHoy: ", fechaHoy);
-    const formattedFecha = fechaHoy.toISOString();
-    console.log("formattedFecha: ", formattedFecha);
+
+    const fechaActualUTC = new Date();
+    const zonaHoraria = 'America/Argentina/Buenos_Aires';
+    const fechaActual = utcToZonedTime(fechaActualUTC, zonaHoraria);
+    const formattedFecha = format(fechaActual, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx');
+    
+    
+    console.log('formattedFecha:', formattedFecha);
+    
     
 
     const nuevoPedido = {
