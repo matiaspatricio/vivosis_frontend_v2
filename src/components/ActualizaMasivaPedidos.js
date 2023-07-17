@@ -8,6 +8,10 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { format, compareAsc  } from 'date-fns'
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime'
+import Divider from '@mui/material/Divider';
+
 import Typography from '@mui/material/Typography';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -25,10 +29,16 @@ function ActualizaMasivaPedidos() {
   const [clientes, setClientes] = useState([]);
   const [selectedClientes, setSelectedClientes] = useState([]);
   const [selectedFechaEntrega, setSelectedFechaEntrega] = useState(null);
+
+  
+
   const [localidades, setLocalidades] = useState([]);
   const [selectedLocalidad, setSelectedLocalidad] = useState('');
   const [estadosPedido, setEstadosPedido] = useState([]);
   const [selectedEstadoPedido, setSelectedEstadoPedido] = useState('');
+  const [selectedFechaCreacion, setSelectedFechaCreacion] = useState('');
+
+  
   const [estadosPago, setEstadosPago] = useState([]);
   const [selectedEstadoPago, setSelectedEstadoPago] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
@@ -126,16 +136,42 @@ function ActualizaMasivaPedidos() {
     setCheckEstadoPedido(event.target.checked);
   };
 
+  const handleFechaCreacionChange = event => {
+    setSelectedFechaCreacion(event);
+  };
+
   const handleCheckEstadoPagoChange = event => {
     setCheckEstadoPago(event.target.checked);
   };
 
   const handleGuardar = () => {
-    setGuardarHabilitado(false);
+    
 
+    if (!selectedFechaCreacion) {
+      setMensajeError(true);
+      setMensaje('Debe seleccionar una fecha de creación.');
+      setMostrarMensaje(true);
+      return;
+    }
+    
+    setGuardarHabilitado(false);
+    
     const pedidosClientes = pedidos.filter(pedido => selectedClientes.includes(pedido.nombre_cliente));
 
-    const pedidosActualizados = pedidosClientes.map(pedido => ({
+    const formattedDate = selectedFechaCreacion.$d.toISOString();    
+    
+    
+    const pedidosClientesFecha = pedidosClientes.filter(pedido => {
+      const fechaCreacion = pedido.fecha;
+      const fechaFiltro = formattedDate;
+
+        
+
+      return fechaCreacion < fechaFiltro;
+    });
+    
+
+    const pedidosActualizados = pedidosClientesFecha.map(pedido => ({
       ...pedido,
       fecha_entrega: checkFechaEntrega ? (selectedFechaEntrega ? selectedFechaEntrega.format('DD/MM/YYYY') : '') : pedido.fecha_entrega,
       localidad: checkLocalidad ? selectedLocalidad : pedido.localidad,
@@ -143,8 +179,8 @@ function ActualizaMasivaPedidos() {
       estado_pago: checkEstadoPago ? selectedEstadoPago : pedido.estado_pago,
       usuario : localStorage.getItem('username')
 
-    }));
-
+    }));    
+    
     pedidosActualizados.forEach(pedido => {
       axios.put(`https://vivosis.vercel.app/api/pedido/${pedido._id}`, pedido)
         .then(response => {
@@ -170,7 +206,7 @@ function ActualizaMasivaPedidos() {
       <Card sx={{ display: 'flex' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography variant="h5" component='h4' gutterBottom sx={{ textAlign: 'center', mt: 3, mb: 3 }}>Actualizar todos los pedidos (pendientes) de clientes</Typography>
+          <Typography variant="h5" component='h4' gutterBottom sx={{ textAlign: 'center', mt: 3, mb: 3 }}>Actualizar pedidos (pendientes) de clientes</Typography>
           <Box display="flex" justifyContent="center" alignItems="center" >
             <Box width={800}>
               
@@ -188,7 +224,26 @@ function ActualizaMasivaPedidos() {
                     />
                   )}
                 />
-                <br />
+                <br />                
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      sx={{ m: 1, width: 250 }}
+                      label="Fecha corte par actualizar"
+                      value={selectedFechaCreacion}
+                      onChange={handleFechaCreacionChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          margin="dense"
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Box>
+                <Divider sx={{ my: 2 }} />           
                 <div>
                   <FormControlLabel sx={{ m: 1, width: 250 }}
                     control={<Switch checked={checkFechaEntrega} onChange={handleCheckFechaEntregaChange} />}
@@ -297,7 +352,7 @@ function ActualizaMasivaPedidos() {
           elevation={6}
           variant="filled"
           onClose={handleSnackbarClose}
-          severity="success"
+          severity={mensajeError ? "error" : "success"}
         >
           {mensaje}
         </MuiAlert>
