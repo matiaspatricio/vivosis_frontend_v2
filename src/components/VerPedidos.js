@@ -211,7 +211,7 @@ function VerPedidos() {
 
   const columns = [
     { field: '_id', headerName: 'Id', flex: 0.5 },
-    { field: 'fecha', headerName: 'Fecha', flex: 0.8 },
+    { field: 'fecha', headerName: 'Fecha', flex: 0.8 , type: 'date' },
     { field: 'nombre_cliente', headerName: 'Cliente', flex: 1.2 },
     { field: 'localidad', headerName: 'Localidad', flex: 0.8 },
     { field: 'nombre_articulo', headerName: 'Artículo', flex: 1.5 },
