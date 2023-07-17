@@ -140,7 +140,7 @@ function VerPedidos() {
         })
           .then(response => response.json())
           .then(data => {
-            console.log('Stock del producto actualizado:', data);
+            console.log('Stock del producto actualizado::', data);
           })
           .catch(error => {
             console.log('Error al actualizar el stock del producto:', error);
