@@ -30,6 +30,12 @@ function ModificarPedido() {
     { value: 'CANCELADO', label: 'CANCELADO' }
   ];
 
+  const listaEstadosPago = [
+    { value: 'PENDIENTE', label: 'PENDIENTE' },
+    { value: 'ABONADO', label: 'ABONADO' }
+  ];
+    
+
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -44,6 +50,7 @@ function ModificarPedido() {
   const [total, setTotal] = useState(0);
   const [costo, setCosto] = useState(0);
   
+  const [estadoPago, setEstadoPago] = useState('');
   const [estadoPedido, setEstadoPedido] = useState('');
   const [comentarios, setComentarios] = useState('');
   const [fechaEntrega, setFechaEntrega] = useState(null); // Nuevo estado para la fecha de entrega
@@ -134,6 +141,10 @@ function ModificarPedido() {
     setCosto(event.target.value);
   };
 
+  
+  const handleEstadoPagoChange = event => {
+    setEstadoPago(event.target.value);
+  };
   const handleEstadoChange = event => {
     setEstadoPedido(event.target.value);
   };
@@ -208,6 +219,7 @@ function ModificarPedido() {
       total,
       costo,
       estado_pedido:estadoPedido,
+      estado_pago: estadoPago,
       comentarios,
       fecha_entrega: fechaEntrega, // Agregar fecha de entrega al objeto del pedido modificado
       usuario,
@@ -331,9 +343,17 @@ function ModificarPedido() {
               onClick={handleDialogOpen}
               variant="outlined"
               margin="dense"
-              disabled
+              
             />
             <br />
+            <TextField
+              label="Estado pago"
+              value={estadoPago}
+              onChange={handleEstadoPagoChange}
+              variant="outlined"
+              margin="dense"
+              />
+              <br />
             <TextField
               label="Comentarios"
               value={comentarios}

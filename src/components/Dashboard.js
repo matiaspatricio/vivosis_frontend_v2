@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import { Typography, Card, CardContent, Grid } from "@mui/material";
 import { startOfToday, subDays, format } from 'date-fns';
-import { getPedidosPendientes, getPedidosMes, getPedidosSemana, getPedidosAyer , getPedidosHoy } from "./api/pedido/pedido";
+import { getPedidosPendientes, getPedidosMes, getPedidosSemana, getPedidosAyer , getPedidosHoy, getPedidosSemanaAnterior } from "./api/pedido/pedido";
 
 const Dashboard = () => {
   const [pedidosPendientes, setPedidosPendientes] = useState([]);
   const [pedidosPreparados, setPedidosPreparados] = useState([]);
   const [clientesConPedidosPendientes, setClientesConPedidosPendientes] = useState([]);
   const [clientesConPedidosPreparados, setClientesConPedidosPreparados] = useState([]);
+  const [pedidosHoy, setPedidosHoy] = useState([]); 
+  const [pedidosAyer, setPedidosAyer] = useState([]);
+  const [pedidosSemana, setPedidosSemana] = useState([]); 
+  const [pedidosSemanaAnterior, setPedidosSemanaAnterior] = useState([]); 
+  
   const [dineroPendiente, setDineroPendiente] = useState(0);
   const [totalHoy, setTotalHoy] = useState(0);
   const [totalSemana, setTotalSemana] = useState(0);
+  const [totalSemanaAnterior, setTotalSemanaAnterior] = useState(0);
   
   const [totalAyer, setTotalAyer] = useState(0);
   const [montoTotal, setMontoTotal] = useState(0);
@@ -19,16 +25,21 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        
+        setPedidosHoy( await getPedidosHoy());
+        setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));        
 
-        const pedidosSemana = await getPedidosSemana();
-        setTotalSemana(pedidosSemana.reduce((total, pedido) => total + pedido.total, 0));
-
-        const pedidosAyer = await getPedidosAyer();
+        setPedidosAyer( await getPedidosAyer());        
         setTotalAyer(pedidosAyer.reduce((total, pedido) => total + pedido.total, 0));
 
-        const pedidosHoy = await getPedidosHoy();
-        setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));
-        console.log("pedidosHoy", pedidosHoy)
+        setPedidosSemana( await getPedidosSemana());
+        setTotalSemana(pedidosSemana.reduce((total, pedido) => total + pedido.total, 0));
+        
+
+        setPedidosSemanaAnterior( await getPedidosSemanaAnterior());
+        setTotalSemanaAnterior(pedidosSemanaAnterior.reduce((total, pedido) => total + pedido.total, 0));
+        console.log("Pedidos de la semana:", pedidosSemanaAnterior)
+        console.log("Total de la semana:", totalSemanaAnterior)
 
         const pedidosMes = await getPedidosMes();
          setMontoTotal(pedidosMes.reduce((total, pedido) => {
@@ -55,6 +66,7 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
+
   return (
     <Grid container spacing={2} mt={5}>
       <Grid item xs={12} md={6}>
@@ -65,8 +77,18 @@ const Dashboard = () => {
             </Typography>
             <Typography variant="h4">{pedidosPendientes.length}</Typography>
           </CardContent>
+        </Card>        
+      </Grid>      
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Clientes con pedidos pendientes
+            </Typography>
+            <Typography variant="h4">{clientesConPedidosPendientes.length}</Typography>
+          </CardContent>
         </Card>
-      </Grid>
+      </Grid>            
       <Grid item xs={12} md={6}>
         <Card>
           <CardContent>
@@ -81,29 +103,19 @@ const Dashboard = () => {
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Clientes con pedidos pendientes
-            </Typography>
-            <Typography variant="h4">{clientesConPedidosPendientes.length}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
               Clientes con pedidos preparados
             </Typography>
             <Typography variant="h4">{clientesConPedidosPreparados.length}</Typography>
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6}>  
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Dinero pendiente de cobro
+            Cant. Pedidos hoy 
             </Typography>
-            <Typography variant="h4">${dineroPendiente}</Typography>
+            <Typography variant="h4">{pedidosHoy.length ? pedidosHoy.length : 0 }</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -116,7 +128,17 @@ const Dashboard = () => {
             <Typography variant="h4">${totalHoy}</Typography>
           </CardContent>
         </Card>
-      </Grid>
+      </Grid>        
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Cant. Pedidos ayer
+            </Typography>
+            <Typography variant="h4">{pedidosAyer.length ? pedidosAyer.length : 0 }</Typography>
+          </CardContent>
+        </Card>
+      </Grid>       
       <Grid item xs={12} md={6}>
         <Card>
           <CardContent>
@@ -126,17 +148,49 @@ const Dashboard = () => {
             <Typography variant="h4">${totalAyer}</Typography>
           </CardContent>
         </Card>
-      </Grid>
-      <Grid item xs={12} md={6}>
+      </Grid> 
+      <Grid item xs={12} md={6}>        
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Total de últimos 7 días
+              Cant. esta semana
             </Typography>
-            <Typography variant="h4">${totalSemana}</Typography>
+            <Typography variant="h4">{pedidosSemana.length ? pedidosSemana.length : 0 }</Typography>
           </CardContent>
         </Card>
       </Grid>
+      <Grid item xs={12} md={6}>        
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Total esta semana
+            </Typography>
+            <Typography variant="h4">${totalSemana ? totalSemana : 0 }</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      
+      <Grid item xs={12} md={6}>        
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Cant.  semana anterior
+            </Typography>
+            <Typography variant="h4">{pedidosSemanaAnterior.length ? pedidosSemanaAnterior.length : 0 }</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12} md={6}>        
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Total semana anterior
+            </Typography>
+            <Typography variant="h4">${totalSemanaAnterior ? totalSemanaAnterior : 0 }</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      
       <Grid item xs={12} md={6}>
   <Card>
     <CardContent>

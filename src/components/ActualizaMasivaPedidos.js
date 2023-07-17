@@ -141,6 +141,7 @@ function ActualizaMasivaPedidos() {
       localidad: checkLocalidad ? selectedLocalidad : pedido.localidad,
       estado_pedido: checkEstadoPedido ? selectedEstadoPedido : pedido.estado_pedido,
       estado_pago: checkEstadoPago ? selectedEstadoPago : pedido.estado_pago,
+      usuario : localStorage.getItem('username')
 
     }));
 
