@@ -1485,7 +1485,9 @@
     react-is "^18.2.0"
 
 "@mui/x-data-grid@^6.9.2":
-  version "6.9.2"
+  version "6.10.0"
+  resolved "https://registry.npmjs.org/@mui/x-data-grid/-/x-data-grid-6.10.0.tgz"
+  integrity sha512-x9h+Z4B2vu+ZKKwClBVs30Y9eZYdhqyV3toHH2E0zat7FIZxwiVfk6qz4Q98V1fV0Fe1nczPj9i0siUmduMEXg==
   dependencies:
     "@babel/runtime" "^7.22.5"
     "@mui/utils" "^5.13.6"
@@ -1494,7 +1496,9 @@
     reselect "^4.1.8"
 
 "@mui/x-date-pickers@^6.9.2":
-  version "6.9.2"
+  version "6.10.0"
+  resolved "https://registry.npmjs.org/@mui/x-date-pickers/-/x-date-pickers-6.10.0.tgz"
+  integrity sha512-tp0i65JqZarIRyyTyQy5OjOPgjJv5cO7oQAbOrAePIHn7UEYPXe3k4ISiUzEAjBBXy1HhwQxGRJslVp4BXe3MA==
   dependencies:
     "@babel/runtime" "^7.22.5"
     "@mui/utils" "^5.13.6"
@@ -6749,7 +6753,9 @@ style-loader@^3.3.1:
   version "3.3.3"
 
 styled-components@^6.0.3:
-  version "6.0.3"
+  version "6.0.4"
+  resolved "https://registry.npmjs.org/styled-components/-/styled-components-6.0.4.tgz"
+  integrity sha512-lRJt4vg8hKJhlVG+VKz8QEqPCXKyTryZZ59odyK0UC0HHV3u/mshWTfSay8NpkN0Xijw1iN9r0Leld3dcCcp/w==
   dependencies:
     "@babel/cli" "^7.21.0"
     "@babel/core" "^7.21.0"
