@@ -21,33 +21,16 @@ const Dashboard = () => {
   const [totalAyer, setTotalAyer] = useState(0);
   const [montoTotal, setMontoTotal] = useState(0);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
-        setPedidosHoy( await getPedidosHoy());
-        setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));        
-
-        setPedidosAyer( await getPedidosAyer());        
-        setTotalAyer(pedidosAyer.reduce((total, pedido) => total + pedido.total, 0));
-
-        setPedidosSemana( await getPedidosSemana());
-        setTotalSemana(pedidosSemana.reduce((total, pedido) => total + pedido.total, 0));
-        
-
-        setPedidosSemanaAnterior( await getPedidosSemanaAnterior());
-        setTotalSemanaAnterior(pedidosSemanaAnterior.reduce((total, pedido) => total + pedido.total, 0));
-        console.log("Pedidos de la semana:", pedidosSemanaAnterior)
-        console.log("Total de la semana:", totalSemanaAnterior)
+        setPedidosHoy(await getPedidosHoy());
+        setPedidosAyer(await getPedidosAyer());
+        setPedidosSemana(await getPedidosSemana());
+        setPedidosSemanaAnterior(await getPedidosSemanaAnterior());
 
         const pedidosMes = await getPedidosMes();
-         setMontoTotal(pedidosMes.reduce((total, pedido) => {
-          //console.log("Pedido:", pedido); esto borrarlo
-          //console.log("Total acumulado:", total);
-          //console.log("Total del pedido:", pedido.total);oka
-          return total + pedido.total;
-        }, 0));        
+        setMontoTotal(pedidosMes.reduce((total, pedido) => total + pedido.total, 0));
 
         const data = await getPedidosPendientes();
         setPedidosPendientes(data.filter((pedido) => pedido.estado_pedido === "PENDIENTE"));
@@ -56,9 +39,6 @@ const Dashboard = () => {
         setClientesConPedidosPreparados(Array.from(new Set(data.filter((pedido) => pedido.estado_pedido === "PREPARADO").map((pedido) => pedido.nombre_cliente))));
         
         setDineroPendiente(data.filter((pedido) => pedido.estado_pago === "PENDIENTE").reduce((total, pedido) => total + pedido.total, 0));
-                
-        
-
       } catch (error) {
         console.log("Error al cargar los pedidos:", error);
       }
@@ -66,6 +46,22 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));
+  }, [pedidosHoy]);
+
+  useEffect(() => {
+    setTotalAyer(pedidosAyer.reduce((total, pedido) => total + pedido.total, 0));
+  }, [pedidosAyer]);
+
+  useEffect(() => {
+    setTotalSemana(pedidosSemana.reduce((total, pedido) => total + pedido.total, 0));
+  }, [pedidosSemana]);
+
+  useEffect(() => {
+    setTotalSemanaAnterior(pedidosSemanaAnterior.reduce((total, pedido) => total + pedido.total, 0));
+  }, [pedidosSemanaAnterior]);
 
   return (
     <Grid container spacing={2} mt={5}>
@@ -113,9 +109,9 @@ const Dashboard = () => {
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-            Cant. Pedidos hoy 
+              Cant. Pedidos hoy 
             </Typography>
-            <Typography variant="h4">{pedidosHoy.length ? pedidosHoy.length : 0 }</Typography>
+            <Typography variant="h4">{pedidosHoy.length}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -135,7 +131,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Cant. Pedidos ayer
             </Typography>
-            <Typography variant="h4">{pedidosAyer.length ? pedidosAyer.length : 0 }</Typography>
+            <Typography variant="h4">{pedidosAyer.length}</Typography>
           </CardContent>
         </Card>
       </Grid>       
@@ -155,7 +151,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Cant. esta semana
             </Typography>
-            <Typography variant="h4">{pedidosSemana.length ? pedidosSemana.length : 0 }</Typography>
+            <Typography variant="h4">{pedidosSemana.length}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -165,7 +161,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Total esta semana
             </Typography>
-            <Typography variant="h4">${totalSemana ? totalSemana : 0 }</Typography>
+            <Typography variant="h4">${totalSemana}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -176,7 +172,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Cant.  semana anterior
             </Typography>
-            <Typography variant="h4">{pedidosSemanaAnterior.length ? pedidosSemanaAnterior.length : 0 }</Typography>
+            <Typography variant="h4">{pedidosSemanaAnterior.length}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -186,22 +182,21 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Total semana anterior
             </Typography>
-            <Typography variant="h4">${totalSemanaAnterior ? totalSemanaAnterior : 0 }</Typography>
+            <Typography variant="h4">${totalSemanaAnterior}</Typography>
           </CardContent>
         </Card>
       </Grid>
       
       <Grid item xs={12} md={6}>
-  <Card>
-    <CardContent>
-      <Typography variant="h6" gutterBottom>
-        Monto total de pedidos del mes
-      </Typography>
-      <Typography variant="h4">${montoTotal}</Typography>
-    </CardContent>
-  </Card>
-</Grid>
-
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Monto total de pedidos del mes
+            </Typography>
+            <Typography variant="h4">${montoTotal}</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
     </Grid>
   );
 };
