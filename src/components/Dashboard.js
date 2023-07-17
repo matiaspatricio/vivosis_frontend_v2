@@ -186,6 +186,17 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Dinero pendiente de cobro
+            </Typography>
+            <Typography variant="h4">${dineroPendiente ? dineroPendiente : 0}</Typography>
+          </CardContent>
+        </Card>
+      </Grid>
       
       <Grid item xs={12} md={6}>
         <Card>
@@ -193,7 +204,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Monto total de pedidos del mes
             </Typography>
-            <Typography variant="h4">${montoTotal}</Typography>
+            <Typography variant="h4">${montoTotal ? montoTotal : 0 }</Typography>
           </CardContent>
         </Card>
       </Grid>
