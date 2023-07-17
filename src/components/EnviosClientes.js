@@ -30,6 +30,14 @@ function EnviosClientes() {
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
 
+  const sortingOrder = [
+    {
+      field: 'cliente',
+      sort: 'asc',
+    },
+  ];
+  
+
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
@@ -72,7 +80,7 @@ function EnviosClientes() {
     Cliente: ${pedidosCliente[0].nombre_cliente}
     Localidad: ${pedidosCliente[0].localidad}
     Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
-    Total: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
+    Total: a pagar: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
   
   Productos que compraste:
   ${pedidosCliente
@@ -131,11 +139,25 @@ function EnviosClientes() {
     pedido.cliente.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  const sortedPedidosPorCliente = filteredPedidosPorCliente.sort((a, b) => {
+    const clienteA = a.cliente.toLowerCase();
+    const clienteB = b.cliente.toLowerCase();
+    if (clienteA < clienteB) {
+      return -1;
+    }
+    if (clienteA > clienteB) {
+      return 1;
+    }
+    return 0;
+  });
+
   const columns = [
     { field: 'cliente', headerName: 'Cliente', flex: 1 },
-    { field: 'total', headerName: 'Total', flex: 1 },
+    { field: 'total', headerName: 'Total a pagar', flex: 1 },
     { field: 'fecha_entrega', headerName: 'Fecha de Entrega', flex: 1 },
     { field: 'localidad', headerName: 'Localidad', flex: 1 },
+    { field: 'estado_pedido', headerName: 'Estado del Pedido', flex: 1 },
+    { field: 'estado_pago', headerName: 'Estado del Pago', flex: 1},
     {
       field: 'detalle',
       headerName: 'Detalle',
@@ -173,7 +195,10 @@ function EnviosClientes() {
               value={searchValue}
               onChange={handleSearchChange}
             />
-            <DataGrid rows={filteredPedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }} disableRowSelectionOnClick density="compact" />
+            <DataGrid rows={sortedPedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }}
+              disableRowSelectionOnClick density="compact"
+              
+            />
           </Box>
         </Box>
       )}
