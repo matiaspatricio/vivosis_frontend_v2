@@ -32,9 +32,9 @@ const Dashboard = () => {
 
         const pedidosMes = await getPedidosMes();
          setMontoTotal(pedidosMes.reduce((total, pedido) => {
-          //console.log("Pedido:", pedido);
+          //console.log("Pedido:", pedido); esto borrarlo
           //console.log("Total acumulado:", total);
-          //console.log("Total del pedido:", pedido.total);
+          //console.log("Total del pedido:", pedido.total);oka
           return total + pedido.total;
         }, 0));        
 
