@@ -122,7 +122,8 @@ function EnviosClientes() {
     Producto: ${pedido.nombre_articulo}
     Cantidad: ${pedido.cantidad}
     Precio unitario: $${pedido.precio || 0}
-    Total de este producto: $${pedido.total || 0}
+    Total: $${pedido.total || 0}
+    Estado: ${pedido.estado_pago ? estado_pago: ''}
     Comentarios: ${pedido.comentarios ? comentarios: ''}
   --------------------------------------
   `
