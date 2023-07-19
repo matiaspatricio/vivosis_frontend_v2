@@ -7,7 +7,6 @@ import { Card, Box, Typography, TextField } from '@mui/material';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Alert from '@mui/material/Alert';
 
-
 const useStyles = makeStyles({
   root: {
     height: 400,
@@ -69,8 +68,34 @@ function EnviosClientes() {
     return total;
   }, 0);
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard  = async (cliente) => {
     setCopied(true);
+    
+    
+    const pedidosCliente = pedidos.filter((pedido) => pedido.nombre_cliente === cliente);
+    setMensaje(`Hola 😁👋🏻 Soy Narela del vivo de maquillajes 😊, te dejo tu total *(El total del pedido esta en "leer mas" abajo de todo)* :
+
+  Detalle de tu pedido:
+    Cliente: ${pedidosCliente[0].nombre_cliente}
+    Localidad: ${pedidosCliente[0].localidad}
+    Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
+    Total a pagar: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
+  
+  Productos que compraste:
+  ${pedidosCliente
+    .map(
+      (pedido) => `
+    Producto: ${pedido.nombre_articulo}
+    Cantidad: ${pedido.cantidad}
+    Precio unitario: $${pedido.precio || 0}
+    Total de este producto: $${pedido.total || 0}
+    Comentarios: ${pedido.comentarios}
+  --------------------------------------
+  `
+    )
+    .join('')}
+  `);
+
 
     setTimeout(() => {
       setCopied(false);
@@ -79,13 +104,13 @@ function EnviosClientes() {
 
   const handleDetalle = async (cliente) => {
     const pedidosCliente = pedidos.filter((pedido) => pedido.nombre_cliente === cliente);
-    const mensaje = `Hola 😁👋🏻 Soy Narela del vivo de maquillajes 😊, te dejo tu total *(El total del pedido esta en "leer mas" abajo de todo)* :
+    setMensaje(`Hola 😁👋🏻 Soy Narela del vivo de maquillajes 😊, te dejo tu total *(El total del pedido esta en "leer mas" abajo de todo)* :
 
   Detalle de tu pedido:
     Cliente: ${pedidosCliente[0].nombre_cliente}
     Localidad: ${pedidosCliente[0].localidad}
     Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
-    Total: a pagar: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
+    Total a pagar: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
   
   Productos que compraste:
   ${pedidosCliente
@@ -93,14 +118,14 @@ function EnviosClientes() {
       (pedido) => `
     Producto: ${pedido.nombre_articulo}
     Cantidad: ${pedido.cantidad}
-    Precio unitario:$ ${pedido.precio || 0}
-    Total de este producto:$ ${pedido.total || 0}
+    Precio unitario: $${pedido.precio || 0}
+    Total de este producto: $${pedido.total || 0}
     Comentarios: ${pedido.comentarios}
   --------------------------------------
   `
     )
     .join('')}
-  `;
+  `);
 
     const clienteData = clientes.find((c) => c.nombre === cliente);
     if (!clienteData) {
@@ -162,7 +187,7 @@ function EnviosClientes() {
     { field: 'fecha_entrega', headerName: 'Fecha de Entrega', flex: 1 },
     { field: 'localidad', headerName: 'Localidad', flex: 1 },
     { field: 'estado_pedido', headerName: 'Estado del Pedido', flex: 1 },
-    { field: 'estado_pago', headerName: 'Estado del Pago', flex: 1},
+    { field: 'estado_pago', headerName: 'Estado del Pago', flex: 1 },
     {
       field: 'detalle',
       headerName: 'Detalle',
@@ -173,7 +198,7 @@ function EnviosClientes() {
           <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)} size="small" style={{ marginLeft: 16 }}>
             ENVIAR
           </Button>
-          <CopyToClipboard text={mensaje} onCopy={handleCopyToClipboard}>
+          <CopyToClipboard text={mensaje} onCopy={() => handleCopyToClipboard(params.row.cliente)}>
             <Button variant="contained" color="primary" size="small" style={{ marginLeft: 16 }}>
               Copiar
             </Button>
@@ -208,19 +233,15 @@ function EnviosClientes() {
               density="compact"
             />
           </Box>
-          <br/>
-          <Box style={{ margin: '1rem 0' }} align="center" width={350}>
-            {copied && (
-              <Alert 
-              elevation={6}
-            variant="filled"
-              severity="success">
-                Mensaje copiado al portapapeles.
-              </Alert>
-            )}
-          </Box>
         </Box>
       )}
+      <Box style={{ margin: '1rem 0' }} align="center">
+        {copied && (
+          <Alert severity="success">
+            Mensaje copiado al portapapeles.
+          </Alert>
+        )}
+      </Box>
     </Box>
   );
 }
