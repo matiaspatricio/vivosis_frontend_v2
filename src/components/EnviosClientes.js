@@ -33,6 +33,9 @@ function EnviosClientes() {
   const [searchValue, setSearchValue] = useState('');
   const [copied, setCopied] = useState(false);
   const [mensaje, setMensaje] = useState('');
+  const [pedidosCliente, setPedidosCliente] = useState('');
+
+  
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -72,13 +75,13 @@ function EnviosClientes() {
     setCopied(true);
     
     
-    const pedidosCliente = pedidos.filter((pedido) => pedido.nombre_cliente === cliente);
+    setPedidosCliente(pedidos.filter((pedido) => pedido.nombre_cliente === cliente));
     setMensaje(`Hola 😁👋🏻 Soy Narela del vivo de maquillajes 😊, te dejo tu total *(El total del pedido esta en "leer mas" abajo de todo)* :
 
   Detalle de tu pedido:
     Cliente: ${pedidosCliente[0].nombre_cliente}
-    Localidad: ${pedidosCliente[0].localidad}
-    Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
+    Localidad: ${pedidosCliente[0].localidad ? localidad : ''}
+    Fecha de entrega: ${pedidosCliente[0].fecha_entrega ? fecha_entrega : ''}
     Total a pagar: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
   
   Productos que compraste:
@@ -89,7 +92,7 @@ function EnviosClientes() {
     Cantidad: ${pedido.cantidad}
     Precio unitario: $${pedido.precio || 0}
     Total de este producto: $${pedido.total || 0}
-    Comentarios: ${pedido.comentarios}
+    Comentarios: ${pedido.comentarios ? comentarios: ''}
   --------------------------------------
   `
     )
@@ -108,8 +111,8 @@ function EnviosClientes() {
 
   Detalle de tu pedido:
     Cliente: ${pedidosCliente[0].nombre_cliente}
-    Localidad: ${pedidosCliente[0].localidad}
-    Fecha de entrega: ${pedidosCliente[0].fecha_entrega}
+    Localidad: ${pedidosCliente[0].localidad ? localidad : ''}
+    Fecha de entrega: ${pedidosCliente[0].fecha_entrega ? fecha_entrega : ''}
     Total a pagar: $ ${pedidosCliente.reduce((total, pedido) => total + (pedido.estado_pago !== 'ABONADO' ? (pedido.total || 0) : 0), 0)}
   
   Productos que compraste:
@@ -120,7 +123,7 @@ function EnviosClientes() {
     Cantidad: ${pedido.cantidad}
     Precio unitario: $${pedido.precio || 0}
     Total de este producto: $${pedido.total || 0}
-    Comentarios: ${pedido.comentarios}
+    Comentarios: ${pedido.comentarios ? comentarios: ''}
   --------------------------------------
   `
     )
