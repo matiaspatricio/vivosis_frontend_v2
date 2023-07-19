@@ -4,6 +4,8 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 import { Card, Box, Typography, TextField } from '@mui/material';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Alert from '@mui/material/Alert';
 
 const useStyles = makeStyles({
   root: {
@@ -29,14 +31,8 @@ function EnviosClientes() {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
-
-  const sortingOrder = [
-    {
-      field: 'cliente',
-      sort: 'asc',
-    },
-  ];
-  
+  const [copied, setCopied] = useState(false);
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -164,9 +160,16 @@ function EnviosClientes() {
       flex: 1,
       align: 'center',
       renderCell: (params) => (
-        <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)} size="small" style={{ marginLeft: 16 }}>
-          ENVIAR
-        </Button>
+        <Box>
+          <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)} size="small" style={{ marginLeft: 16 }}>
+            ENVIAR
+          </Button>
+          <CopyToClipboard text={mensaje} onCopy={() => setCopied(true)}>
+            <Button variant="contained" color="primary" size="small" style={{ marginLeft: 16 }}>
+              Copiar
+            </Button>
+          </CopyToClipboard>
+        </Box>
       ),
     },
   ];
@@ -180,13 +183,6 @@ function EnviosClientes() {
         <div>Cargando clientes...</div>
       ) : (
         <Box className={classes.root}>
-          <Box style={{ maxHeight: '10%', maxWidth: '20%' }} align="left">
-            <Card sx={{ margin: 6 }} align="left">
-              <Typography variant="h6" gutterBottom align="center">
-                Total pendiente: ${totalPendiente}
-              </Typography>
-            </Card>
-          </Box>
           <Box style={{ height: 600, width: '80%' }} align="left" margin={7}>
             <TextField
               label="Buscar por cliente"
@@ -195,10 +191,21 @@ function EnviosClientes() {
               value={searchValue}
               onChange={handleSearchChange}
             />
-            <DataGrid rows={sortedPedidosPorCliente} columns={columns} components={{ Toolbar: GridToolbar }}
-              disableRowSelectionOnClick density="compact"
-              
+            <DataGrid
+              rows={sortedPedidosPorCliente}
+              columns={columns}
+              components={{ Toolbar: GridToolbar }}
+              disableRowSelectionOnClick
+              density="compact"
             />
+          </Box>
+          <br/>
+          <Box style={{ margin: '1rem 0' }} align="center">
+            {copied && (
+              <Alert severity="success">
+                Mensaje copiado al portapapeles.
+              </Alert>
+            )}
           </Box>
         </Box>
       )}
