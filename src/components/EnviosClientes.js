@@ -7,6 +7,7 @@ import { Card, Box, Typography, TextField } from '@mui/material';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Alert from '@mui/material/Alert';
 
+
 const useStyles = makeStyles({
   root: {
     height: 400,
@@ -67,6 +68,14 @@ function EnviosClientes() {
     }
     return total;
   }, 0);
+
+  const handleCopyToClipboard = () => {
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 1500); // Duración del mensaje en milisegundos (ej. 3000ms = 3 segundos)
+  };
 
   const handleDetalle = async (cliente) => {
     const pedidosCliente = pedidos.filter((pedido) => pedido.nombre_cliente === cliente);
@@ -164,7 +173,7 @@ function EnviosClientes() {
           <Button variant="contained" color="primary" onClick={() => handleDetalle(params.row.cliente)} size="small" style={{ marginLeft: 16 }}>
             ENVIAR
           </Button>
-          <CopyToClipboard text={mensaje} onCopy={() => setCopied(true)}>
+          <CopyToClipboard text={mensaje} onCopy={handleCopyToClipboard}>
             <Button variant="contained" color="primary" size="small" style={{ marginLeft: 16 }}>
               Copiar
             </Button>
@@ -200,9 +209,12 @@ function EnviosClientes() {
             />
           </Box>
           <br/>
-          <Box style={{ margin: '1rem 0' }} align="center">
+          <Box style={{ margin: '1rem 0' }} align="center" width={350}>
             {copied && (
-              <Alert severity="success">
+              <Alert 
+              elevation={6}
+            variant="filled"
+              severity="success">
                 Mensaje copiado al portapapeles.
               </Alert>
             )}

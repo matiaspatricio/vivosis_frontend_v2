@@ -106,6 +106,13 @@ function CrearPedido() {
     setMensajeError(false);
   };
 
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
+  };
+
   const handleIdClienteChange = (event, value) => {
     if (value) {
       setIdCliente(value._id);
@@ -336,6 +343,7 @@ function CrearPedido() {
               onChange={handleCantidadChange}
               variant="outlined"
               margin="dense"
+              onKeyDown={handleKeyDown}
             />
             <br />    
             <TextField
@@ -346,6 +354,7 @@ function CrearPedido() {
               onChange={handlePrecioChange}
               variant="outlined"
               margin="dense"
+              onKeyDown={handleKeyDown}
             />
               <br />    
             <TextField
