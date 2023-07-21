@@ -125,6 +125,11 @@ function ModificarPedido() {
     setNombreCliente(event.target.value);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
+  };
   const handleNombreArticuloChange = event => {
     setNombreArticulo(event.target.value);
   };
@@ -307,6 +312,8 @@ function ModificarPedido() {
               onChange={handleCantidadChange}
               variant="outlined"
               margin="dense"
+              onKeyDown={handleKeyDown}
+              onWheel={(e) => e.target.blur()}
             />
             <br />
             <TextField
@@ -316,6 +323,8 @@ function ModificarPedido() {
               onChange={handlePrecioChange}
               variant="outlined"
               margin="dense"
+              onKeyDown={handleKeyDown}
+              onWheel={(e) => e.target.blur()}
             />
             <br />
             <TextField

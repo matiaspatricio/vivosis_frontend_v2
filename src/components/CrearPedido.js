@@ -344,6 +344,7 @@ function CrearPedido() {
               variant="outlined"
               margin="dense"
               onKeyDown={handleKeyDown}
+              onWheel={(e) => e.target.blur()}
             />
             <br />    
             <TextField
@@ -355,6 +356,7 @@ function CrearPedido() {
               variant="outlined"
               margin="dense"
               onKeyDown={handleKeyDown}
+              onWheel={(e) => e.target.blur()}
             />
               <br />    
             <TextField

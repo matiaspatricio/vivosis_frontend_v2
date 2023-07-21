@@ -215,6 +215,14 @@ function EnviosClientes() {
       <Typography variant="h3" sx={{ margin: 5 }} align="left">
         Resumen de Pedidos por Cliente
       </Typography>
+      <Box style={{ margin: '1rem 0' }} align="center">
+        {copied && (
+          <Alert severity="success">
+            Mensaje copiado al portapapeles.
+          </Alert>
+        )}
+      </Box>
+
       {loading ? (
         <div>Cargando clientes...</div>
       ) : (
@@ -237,13 +245,7 @@ function EnviosClientes() {
           </Box>
         </Box>
       )}
-      <Box style={{ margin: '1rem 0' }} align="center">
-        {copied && (
-          <Alert severity="success">
-            Mensaje copiado al portapapeles.
-          </Alert>
-        )}
-      </Box>
+      
     </Box>
   );
 }
