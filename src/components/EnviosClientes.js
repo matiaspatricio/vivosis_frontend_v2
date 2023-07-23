@@ -136,7 +136,7 @@ function EnviosClientes() {
     }
 
     const telefonoCliente = clienteData.telefono;
-    const enlace = `https://api.whatsapp.com/send?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
+    const enlace = `https://api.whatsapp.com/send/?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
 
     // Abrir WhatsApp en una nueva pestaña
     window.open(enlace, '_blank');

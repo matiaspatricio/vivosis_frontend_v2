@@ -20,9 +20,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { Autocomplete } from '@mui/material';
 
 function ModificarPedido() {
-
   const listaEstadosPedido = [
     { value: 'PENDIENTE', label: 'PENDIENTE' },
     { value: 'PREPARADO', label: 'PREPARADO' },
@@ -34,8 +34,6 @@ function ModificarPedido() {
     { value: 'PENDIENTE', label: 'PENDIENTE' },
     { value: 'ABONADO', label: 'ABONADO' }
   ];
-    
-
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -49,28 +47,25 @@ function ModificarPedido() {
   const [precio, setPrecio] = useState(0);
   const [total, setTotal] = useState(0);
   const [costo, setCosto] = useState(0);
-  
   const [estadoPago, setEstadoPago] = useState('');
   const [estadoPedido, setEstadoPedido] = useState('');
   const [comentarios, setComentarios] = useState('');
-  const [fechaEntrega, setFechaEntrega] = useState(null); // Nuevo estado para la fecha de entrega
+  const [fechaEntrega, setFechaEntrega] = useState(null);
   const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
-  const [guardarHabilitado, setGuardarHabilitado] = useState(true);  
+  const [guardarHabilitado, setGuardarHabilitado] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
+  const [tipoEstado, setTipoEstado] = useState('');
 
   useEffect(() => {
     fetch(`https://vivosis.vercel.app/api/pedido/${id}`)
       .then(response => response.json())
       .then(data => {
         setPedido(data);
-        console.log(data);
-        console.log(data.fecha)
       })
       .catch(error => {
         console.log('Error al cargar el pedido:', error);
-        
       });
   }, [id]);
 
@@ -85,9 +80,9 @@ function ModificarPedido() {
     setTotal(pedido.total || 0);
     setCosto(pedido.costo || 0);
     setEstadoPedido(pedido.estado_pedido || '');
+    setEstadoPago(pedido.estado_pago || '');
     setComentarios(pedido.comentarios || '');
-    setFechaEntrega(pedido.fecha_entrega || ''); // Nuevo estado para la fecha de entrega
-    
+    setFechaEntrega(pedido.fecha_entrega || '');
   }, [pedido]);
 
   useEffect(() => {
@@ -130,6 +125,7 @@ function ModificarPedido() {
       event.preventDefault();
     }
   };
+
   const handleNombreArticuloChange = event => {
     setNombreArticulo(event.target.value);
   };
@@ -146,10 +142,10 @@ function ModificarPedido() {
     setCosto(event.target.value);
   };
 
-  
-  const handleEstadoPagoChange = event => {
+  const handleEstadoPagoChange = event => {    
     setEstadoPago(event.target.value);
   };
+
   const handleEstadoChange = event => {
     setEstadoPedido(event.target.value);
   };
@@ -159,24 +155,15 @@ function ModificarPedido() {
   };
 
   const handleFechaEntregaChange = newValue => {
-    const fecha2 =  newValue.toISOString();            
     setFechaEntrega(newValue);
-  }; // Nuevo manejador de cambio para la fecha de entrega
-
-
+  };
 
   const actualizarStock = (cantidadOriginal, nuevaCantidad) => {
-    // Obtener el producto correspondiente al artículo del pedido
     fetch(`https://vivosis.vercel.app/api/producto/${idArticulo}`)
       .then(response => response.json())
       .then(producto => {
-        // Actualizar el stock del producto sumando la cantidad original del artículo al stock
         producto.stock += cantidadOriginal;
-
-        // Actualizar el stock del producto restando la nueva cantidad del artículo al stock
         producto.stock -= nuevaCantidad;
-
-        // Guardar los cambios realizados en el producto
         guardarCambiosEnProducto(producto);
       })
       .catch(error => {
@@ -201,7 +188,8 @@ function ModificarPedido() {
       });
   };
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = (tipoEstado) => {
+    setTipoEstado(tipoEstado);
     setOpenDialog(true);
   };
 
@@ -223,15 +211,14 @@ function ModificarPedido() {
       precio,
       total,
       costo,
-      estado_pedido:estadoPedido,
+      estado_pedido: estadoPedido,
       estado_pago: estadoPago,
       comentarios,
-      fecha_entrega: fechaEntrega, // Agregar fecha de entrega al objeto del pedido modificado
+      fecha_entrega: fechaEntrega,
       usuario,
     };
 
-    const cantidadOriginal = pedido.cantidad; // Guardar la cantidad original del pedido antes de la modificación
-
+    const cantidadOriginal = pedido.cantidad;
     fetch(`https://vivosis.vercel.app/api/pedido/${id}`, {
       method: 'PUT',
       headers: {
@@ -240,11 +227,10 @@ function ModificarPedido() {
       body: JSON.stringify(pedidoModificado),
     })
       .then(response => response.json())
-.then(data => {
+      .then(data => {
         setMensaje('El pedido ha sido actualizado');
         setMostrarMensaje(true);
-        //navigate(`/ModificarPedido/${id}`);
-        actualizarStock(cantidadOriginal, cantidad); // Actualizar el stock después de guardar los cambios en el pedido
+        actualizarStock(cantidadOriginal, cantidad);
         setTimeout(() => {
           navigate(`/verpedidos`);
         }, 800);
@@ -268,15 +254,6 @@ function ModificarPedido() {
               margin="dense"
               disabled
             />
-            <br />
-            <TextField
-              label="ID del Cliente"
-              value={idCliente}
-              onChange={handleIdClienteChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
             <br />            
             <TextField
               label="Nombre del cliente"
@@ -286,16 +263,7 @@ function ModificarPedido() {
               margin="dense"
               disabled
             />
-            <br />
-            <TextField
-              label="ID del Artículo"
-              value={idArticulo}
-              onChange={handleIdArticuloChange}
-              variant="outlined"
-              margin="dense"
-              disabled
-            />
-            <br />
+            <br />            
             <TextField
               label="Nombre del artículo"
               value={nombreArticulo}
@@ -349,20 +317,35 @@ function ModificarPedido() {
             <TextField
               label="Estado"
               value={estadoPedido}
-              onClick={handleDialogOpen}
+              onClick={() => handleDialogOpen('estadoPedido')}
               variant="outlined"
               margin="dense"
-              
             />
             <br />
             <TextField
               label="Estado pago"
               value={estadoPago}
-              onChange={handleEstadoPagoChange}
+              onClick={() => handleDialogOpen('estadoPago')}
               variant="outlined"
               margin="dense"
+            />
+            <br />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker              
+                label="Fecha de entrega"
+                value={fechaEntrega}
+                onChange={handleFechaEntregaChange}
+                renderInput={params => (
+                  <TextField                    
+                    {...params}
+                    
+                    margin="dense"
+                    variant="outlined"
+                  />
+                )}
               />
-              <br />
+            </LocalizationProvider>
+            <br />
             <TextField
               label="Comentarios"
               value={comentarios}
@@ -372,25 +355,31 @@ function ModificarPedido() {
               multiline
               rows={4}
             />
-            
-            <br />            
-            
+            <br />
           </form>
           <Dialog open={openDialog} onClose={handleDialogClose}>
             <DialogTitle>Seleccionar Estado</DialogTitle>
             <DialogContent>
               <Select
-                value={estadoPedido}
-                onChange={handleEstadoChange}
+                value={tipoEstado === 'estadoPedido' ? estadoPedido : estadoPago}
+                onChange={tipoEstado === 'estadoPedido' ? handleEstadoChange : handleEstadoPagoChange}
                 variant="outlined"
                 margin="dense"
                 fullWidth
               >
-                {listaEstadosPedido.map(opcion => (
-                  <MenuItem key={opcion.value} value={opcion.value}>
-                    {opcion.label}
-                  </MenuItem>
-                ))}
+                {tipoEstado === 'estadoPedido' ? (
+                  listaEstadosPedido.map(opcion => (
+                    <MenuItem key={opcion.value} value={opcion.value}>
+                      {opcion.label}
+                    </MenuItem>
+                  ))
+                ) : (
+                  listaEstadosPago.map(opcion => (
+                    <MenuItem key={opcion.value} value={opcion.value}>
+                      {opcion.label}
+                    </MenuItem>
+                  ))
+                )}
               </Select>
             </DialogContent>
             <DialogActions>
