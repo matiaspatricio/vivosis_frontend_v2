@@ -173,14 +173,14 @@ function ActualizaMasivaPedidos() {
 
     const pedidosActualizados = pedidosClientesFecha.map(pedido => ({
       ...pedido,
-      fecha_entrega: checkFechaEntrega ? (selectedFechaEntrega ? selectedFechaEntrega.format('DD/MM/YYYY') : '') : pedido.fecha_entrega,
+      fecha_entrega: checkFechaEntrega ? (selectedFechaEntrega ? new Date(selectedFechaEntrega) : '') : pedido.fecha_entrega,
       localidad: checkLocalidad ? selectedLocalidad : pedido.localidad,
       estado_pedido: checkEstadoPedido ? selectedEstadoPedido : pedido.estado_pedido,
       estado_pago: checkEstadoPago ? selectedEstadoPago : pedido.estado_pago,
       usuario : localStorage.getItem('username')
 
     }));    
-    
+    console.log("pedidosActualizados", pedidosActualizados)
     pedidosActualizados.forEach(pedido => {
       axios.put(`https://vivosis.vercel.app/api/pedido/${pedido._id}`, pedido)
         .then(response => {

@@ -82,7 +82,7 @@ function ModificarPedido() {
     setEstadoPedido(pedido.estado_pedido || '');
     setEstadoPago(pedido.estado_pago || '');
     setComentarios(pedido.comentarios || '');
-    setFechaEntrega(pedido.fecha_entrega || '');
+    setFechaEntrega(pedido.fecha_entrega || null);
   }, [pedido]);
 
   useEffect(() => {
@@ -330,22 +330,7 @@ function ModificarPedido() {
               margin="dense"
             />
             <br />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker              
-                label="Fecha de entrega"
-                value={fechaEntrega}
-                onChange={handleFechaEntregaChange}
-                renderInput={params => (
-                  <TextField                    
-                    {...params}
-                    
-                    margin="dense"
-                    variant="outlined"
-                  />
-                )}
-              />
-            </LocalizationProvider>
-            <br />
+            
             <TextField
               label="Comentarios"
               value={comentarios}
