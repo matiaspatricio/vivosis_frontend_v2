@@ -26,7 +26,7 @@ const theme = createTheme({
     },
     divider: '#BDBDBD',
     background: {
-      default: '#E3F2FD',
+      default: '#f9fafb',
     },
     
   },

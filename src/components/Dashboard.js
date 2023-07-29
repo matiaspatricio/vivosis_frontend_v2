@@ -28,8 +28,9 @@ const Dashboard = () => {
         setPedidosAyer(await getPedidosAyer());
         setPedidosSemana(await getPedidosSemana());
         setPedidosSemanaAnterior(await getPedidosSemanaAnterior());
-
+        
         const pedidosMes = await getPedidosMes();
+        console.log("pedidosMes",pedidosMes);
         setMontoTotal(pedidosMes.reduce((total, pedido) => total + pedido.total, 0));
 
         const data = await getPedidosPendientes();
@@ -46,6 +47,13 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
+
+  const formatToCurrency = (amount) => {
+    return amount.toLocaleString("en-AR", {
+      style: "currency",
+      currency: "ARS",
+    });
+  };
 
   useEffect(() => {
     setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));
@@ -121,7 +129,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Total de hoy 
             </Typography>
-            <Typography variant="h4">${totalHoy}</Typography>
+            <Typography variant="h4">{formatToCurrency(totalHoy)}</Typography>
           </CardContent>
         </Card>
       </Grid>        
@@ -141,7 +149,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Total de ayer
             </Typography>
-            <Typography variant="h4">${totalAyer}</Typography>
+            <Typography variant="h4">{formatToCurrency(totalAyer)}</Typography>
           </CardContent>
         </Card>
       </Grid> 
@@ -161,7 +169,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Total esta semana
             </Typography>
-            <Typography variant="h4">${totalSemana}</Typography>
+            <Typography variant="h4">{formatToCurrency(totalSemana)}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -182,7 +190,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Total semana anterior
             </Typography>
-            <Typography variant="h4">${totalSemanaAnterior}</Typography>
+            <Typography variant="h4">{formatToCurrency(totalSemanaAnterior)}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -193,7 +201,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Dinero pendiente de cobro
             </Typography>
-            <Typography variant="h4">${dineroPendiente ? dineroPendiente : 0}</Typography>
+            <Typography variant="h4">${dineroPendiente ? formatToCurrency(dineroPendiente) : 0}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -204,7 +212,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Monto total de pedidos del mes
             </Typography>
-            <Typography variant="h4">${montoTotal ? montoTotal : 0 }</Typography>
+            <Typography variant="h4">{montoTotal ? formatToCurrency(montoTotal) : 0 }</Typography>
           </CardContent>
         </Card>
       </Grid>

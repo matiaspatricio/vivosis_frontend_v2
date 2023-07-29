@@ -46,6 +46,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import VerPedidosHistorico from './components/VerPedidosHistorico';
 
 function NoMatch() {
   return (
@@ -258,18 +259,7 @@ function App() {
                 <ListItemText primary="VISUALIZAR" />
               </ListItem>
 
-              <ListItem
-                button
-                component={Link}
-                to="/actualizamasivapedidos"
-                onClick={handleDrawerClose}
-                style={{ paddingLeft: 32 }}
-              >
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="ACTUALIZAR PEDIDOS DE CLIENTES" />
-              </ListItem>
+              
 
               <ListItem
                 button
@@ -284,7 +274,33 @@ function App() {
                 <ListItemText primary="ENVIOS TOTALES WHATSAPP" />
               </ListItem>
 
-              {/* Agrega más submenús aquí */}
+              <ListItem
+                button
+                component={Link}
+                to="/verpedidoshistorico"
+                onClick={handleDrawerClose}
+                style={{ paddingLeft: 32 }}
+              >
+                <ListItemIcon>
+                  <VisibilityIcon />
+                </ListItemIcon>
+                <ListItemText primary="VISUALIZAR HISTORICO" />
+              </ListItem>
+
+              <ListItem
+                button
+                component={Link}
+                to="/actualizamasivapedidos"
+                onClick={handleDrawerClose}
+                style={{ paddingLeft: 32 }}
+              >
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="ACTUALIZAR PEDIDOS DE CLIENTES" />
+              </ListItem>
+
+              
             </List>
           </Collapse>
           <ListItem button component={Link} to="/veringresos" onClick={handleDrawerClose}>
@@ -305,6 +321,7 @@ function App() {
         <Route path="/crearproducto" element={<PrivateRoute element={<CrearProducto />} />} />
         <Route path="/veringresos" element={<PrivateRoute element={<VerIngresos />} />} />
         <Route path="/verpedidos" element={<PrivateRoute element={<VerPedidos />} />} />
+        <Route path="/verpedidoshistorico" element={<PrivateRoute element={<VerPedidosHistorico />} />} />
         <Route path="/modificarcliente/:id" element={<PrivateRoute element={<ModificarCliente />} />} />
         <Route path="/modificarproducto/:id" element={<PrivateRoute element={<ModificarProducto />} />} />
         <Route path="/modificaringreso/:id" element={<PrivateRoute element={<ModificarIngreso />} />} />

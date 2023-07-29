@@ -24,7 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Card} from '@mui/material';
 import { utcToZonedTime } from 'date-fns-tz';
 import { format as formatDate, set } from 'date-fns';
-import { actualizarPedido, getPedidosPendientes } from './api/pedido/pedido';
+import { actualizarPedido, getAllPedidos } from './api/pedido/pedido';
 import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -90,7 +90,7 @@ const useStyles = makeStyles({
 });
 
 
-function VerPedidos() {
+function VerPedidosHistorico() {
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -122,7 +122,7 @@ function VerPedidos() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      const jsonGetAllPedidos = await getPedidosPendientes();      
+      const jsonGetAllPedidos = await getAllPedidos();      
       const pedidosConId = jsonGetAllPedidos.map(pedido => ({
         id: pedido._id,
         ...pedido,
@@ -713,4 +713,4 @@ function VerPedidos() {
   );
 }
 
-export default VerPedidos;
+export default VerPedidosHistorico;
