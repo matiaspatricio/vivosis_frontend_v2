@@ -272,13 +272,7 @@ function EnviosClientes() {
 
   return (
     <Box>      
-      <Box style={{ margin: '1rem 0' }} align="center">
-        {copied && (
-          <Alert severity="success">
-            Mensaje copiado al portapapeles.
-          </Alert>
-        )}
-      </Box>
+      
 
       {loading ? (
         <div>Cargando clientes...</div>
@@ -308,11 +302,19 @@ function EnviosClientes() {
               disableRowSelectionOnClick
               density="compact"
             />
-            </Paper>                  
+            </Paper>     
+                        
         
         </Card>
+        
       )}
-      
+      <Box style={{ margin: '1rem 0' }} align="center">
+        {copied && (
+          <Alert severity="success">
+            Mensaje copiado al portapapeles.
+          </Alert>
+        )}
+      </Box> 
     </Box>
   );
 }
