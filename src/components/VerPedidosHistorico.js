@@ -126,8 +126,8 @@ function VerPedidosHistorico() {
       const pedidosConId = jsonGetAllPedidos.map(pedido => ({
         id: pedido._id,
         ...pedido,
-        fecha_entrega:  pedido.fecha_entrega ? formatFecha(pedido.fecha_entrega): null,
-        fecha: formatFecha(pedido.fecha),
+        fecha_entrega:  pedido.fecha_entrega ? formatFechaArg(pedido.fecha_entrega): null,
+        fecha: formatFechaArg(pedido.fecha),
       }));
       setPedidos(pedidosConId);      
       setLoading(false);
@@ -145,6 +145,12 @@ function VerPedidosHistorico() {
     const fechaUtc = new Date(fecha);
     const formattedFecha = utcToZonedTime(fechaUtc, 'America/Argentina/Buenos_Aires');
     const fechaFormateada = formatDate(formattedFecha, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx');    
+    return fechaFormateada;
+  };
+  const formatFechaArg = fecha => {
+    const fechaUtc = new Date(fecha);
+    const formattedFecha = utcToZonedTime(fechaUtc, 'America/Argentina/Buenos_Aires');
+    const fechaFormateada = formatDate(formattedFecha, 'dd-MM-yyyy\' \'HH:mm:ss');    
     return fechaFormateada;
   };
       
