@@ -511,7 +511,7 @@ function VerPedidosHistorico() {
         <Card className={classes.card}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" gutterBottom className={classes.h4}>
-              Pedidos pendientes
+              Pedidos (Historico)
             </Typography>
             
             <Button variant="contained" startIcon={<AddIcon />}className={classes.button}onClick={handleCrearPedido} size="medium">
