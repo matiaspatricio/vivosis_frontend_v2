@@ -126,8 +126,8 @@ function VerPedidos() {
       const pedidosConId = jsonGetAllPedidos.map(pedido => ({
         id: pedido._id,
         ...pedido,
-        fecha_entrega:  pedido.fecha_entrega ? formatFecha(pedido.fecha_entrega): null,
-        fecha: formatFecha(pedido.fecha),
+        fecha_entrega:  pedido.fecha_entrega ? formatFechaArg(pedido.fecha_entrega): null,
+        fecha: formatFechaArg(pedido.fecha),
       }));
       setPedidos(pedidosConId);      
       setLoading(false);
@@ -145,6 +145,13 @@ function VerPedidos() {
     const fechaUtc = new Date(fecha);
     const formattedFecha = utcToZonedTime(fechaUtc, 'America/Argentina/Buenos_Aires');
     const fechaFormateada = formatDate(formattedFecha, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx');    
+    return fechaFormateada;
+  };
+
+  const formatFechaArg = fecha => {
+    const fechaUtc = new Date(fecha);
+    const formattedFecha = utcToZonedTime(fechaUtc, 'America/Argentina/Buenos_Aires');
+    const fechaFormateada = formatDate(formattedFecha, 'dd-MM-yyyy\' \'HH:mm:ss');    
     return fechaFormateada;
   };
       
@@ -407,7 +414,7 @@ function VerPedidos() {
         manageable: false,
         
       },
-      { field: 'fecha', headerName: 'Fecha', flex: 0.8 , type: 'Date' },
+      { field: 'fecha', headerName: 'Fecha', flex: 1 , type: 'Date' },
       { field: 'nombre_cliente', headerName: 'Cliente', flex: 1.2 },
       { field: 'localidad', headerName: 'Localidad', flex: 0.8 },
       { field: 'nombre_articulo', headerName: 'Artículo', flex: 1.5 },
@@ -416,8 +423,8 @@ function VerPedidos() {
       { field: 'total', headerName: 'Total', flex: 0.2 },
       { field: 'costo', headerName: 'Costo', flex: 0.2 },
       { field: 'estado_pedido', headerName: 'Estado Pedido', flex: 0.5 },
-      { field: 'estado_pago', headerName: 'Estado Pago', flex: 0.4 },
-      { field: 'fecha_entrega', headerName: 'Fecha de entrega', flex: 0.8 , type: 'Date'  },
+      { field: 'estado_pago', headerName: 'Estado Pago', flex: 0.5 },
+      { field: 'fecha_entrega', headerName: 'F. entrega', flex: 0.8 , type: 'Date'  },
       { field: 'comentarios', headerName: 'Comentarios', flex: 1 },
       { field: 'usuario', headerName: 'Usuario', flex: 0.5 },
       {
