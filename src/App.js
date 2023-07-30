@@ -284,7 +284,7 @@ function App() {
                 <ListItemIcon>
                   <VisibilityIcon />
                 </ListItemIcon>
-                <ListItemText primary="VISUALIZAR HISTORICO" />
+                <ListItemText primary="HISTORICO (PEDIDOS)" />
               </ListItem>
 
               <ListItem
