@@ -126,8 +126,8 @@ function VerPedidos() {
       const pedidosConId = jsonGetAllPedidos.map(pedido => ({
         id: pedido._id,
         ...pedido,
-        fecha_entrega:  pedido.fecha_entrega ? formatFechaArg(pedido.fecha_entrega): null,
-        fecha: formatFechaArg(pedido.fecha),
+        fecha_entrega:  pedido.fecha_entrega ? (pedido.fecha_entrega): null,
+        fecha: (pedido.fecha),
       }));
       setPedidos(pedidosConId);      
       setLoading(false);
