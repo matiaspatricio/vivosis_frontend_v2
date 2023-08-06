@@ -387,6 +387,15 @@ function VerPedidos() {
     ? filteredPedidosByNombreCliente.filter(pedido => filterNombreArticuloValue.includes(pedido.nombre_articulo))
     : filteredPedidosByNombreCliente;
 
+    const calculateSum = (rows, field) => {
+      return rows.reduce((sum, row) => sum + row[field], 0);
+      
+    };
+    
+    const sumCantidad = calculateSum(filteredPedidosByNombreArticulo, 'cantidad');
+    const sumTotal = calculateSum(filteredPedidosByNombreArticulo, 'total');
+    
+
     const columns = [
       {
         field: 'seleccionado',
@@ -452,6 +461,30 @@ function VerPedidos() {
         filterable: false,
         hideable: false,
         manageable: false,
+      },
+      {
+        field: 'total',
+        headerName: 'Total',
+        flex: 0.2,
+        footerName: 'Total:',
+        renderCell: (params) => {
+          return params.value.toFixed(2);
+        },
+        renderFooter: () => {
+          return sumTotal.toFixed(2);
+        },
+      },
+      {
+        field: 'cantidad',
+        headerName: 'Cantidad',
+        flex: 0.4,
+        footerName: 'Suma:',
+        renderCell: (params) => {
+          return params.value;
+        },
+        renderFooter: () => {
+          return sumCantidad;
+        },
       },
     ];
     
@@ -632,8 +665,9 @@ function VerPedidos() {
               rows={filteredPedidosByNombreArticulo}
               columns={columns}
               pageSize={25}
-              
+              showFooter
               disableRowSelectionOnClick
+              footerHeight={40}
               density="compact"
               
             />

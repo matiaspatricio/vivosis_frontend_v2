@@ -30,7 +30,7 @@ const Dashboard = () => {
         setPedidosSemanaAnterior(await getPedidosSemanaAnterior());
         
         const pedidosMes = await getPedidosMes();
-        console.log("pedidosMes",pedidosMes);
+        
         setMontoTotal(pedidosMes.reduce((total, pedido) => total + pedido.total, 0));
 
         const data = await getPedidosPendientes();

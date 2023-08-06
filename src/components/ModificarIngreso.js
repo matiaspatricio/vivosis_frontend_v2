@@ -162,8 +162,7 @@ function ModificarIngreso() {
             })
               .then(response => response.json())
               .then(updatedProducto => {
-                console.log('Producto actualizado:', updatedProducto);
-                                
+                console.log('Producto actualizado:', updatedProducto);                                
                 setTimeout(() => {
                   navigate(`/veringresos`);
                 }, 800);

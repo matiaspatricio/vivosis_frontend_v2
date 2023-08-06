@@ -314,7 +314,8 @@ function App() {
         </List>
       </Drawer>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} /> 
+        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
         <Route path="/verclientes" element={<PrivateRoute element={<VerClientes />} />} />
         <Route path="/crearcliente" element={<PrivateRoute element={<CrearCliente />} />} />
         <Route path="/verproductos" element={<PrivateRoute element={<VerProductos />} />} />
@@ -336,9 +337,7 @@ function App() {
         />
         <Route path="/enviosclientes/" element={<PrivateRoute element={<EnviosClientes />} />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
-        <Route
-          path="/register"
-          element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
+        <Route path="/register" element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
         />
         <Route path="/logout" element={isAuthenticated ? <Logout /> : <Navigate to="/login" replace />} />
         <Route path="*" element={<NoMatch />} />

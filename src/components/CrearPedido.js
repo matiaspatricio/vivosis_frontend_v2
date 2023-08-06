@@ -240,7 +240,7 @@ function CrearPedido() {
     const formattedFecha = format(fechaActual, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx');
     
     
-    console.log('formattedFecha:', formattedFecha);
+    
     
     
 
@@ -262,7 +262,7 @@ function CrearPedido() {
       localidad: valorLocalidad // Usar valorLocalidad en lugar de localidad
     };
 
-    console.log('nuevoPedido:', nuevoPedido)
+    
 
     fetch('https://vivosis.vercel.app/api/pedido/', {
       method: 'POST',

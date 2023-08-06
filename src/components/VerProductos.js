@@ -70,7 +70,7 @@ function VerProductos() {
 
   const handleEdit = id => {
     // Redirigir a la página de edición del producto con el id proporcionado
-    console.log(id);
+    
     navigate(`/ModificarProducto/${id}`);
   };
 

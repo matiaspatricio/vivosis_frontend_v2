@@ -63,7 +63,7 @@ function ModificarCliente() {
       .then(response => response.json())
       .then(data => {
         setCliente(data);
-        console.log(data.nombre)
+        
       })
       .catch(error => {
         console.log('Error al cargar el cliente:', error);
@@ -152,7 +152,7 @@ function ModificarCliente() {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('Cliente modificado:', data);
+        
         setMensaje('El cliente ha sido actualizado');
         setMostrarMensaje(true);
         

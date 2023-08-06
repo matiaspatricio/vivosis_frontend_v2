@@ -72,7 +72,7 @@ function VerIngresos() {
   };
 
   const handleEdit = id => {
-    console.log(id);
+    
     navigate(`/ModificarIngreso/${id}`);
   };
   const handleCancelDelete = () => {

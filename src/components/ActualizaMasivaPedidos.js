@@ -178,7 +178,7 @@ function ActualizaMasivaPedidos() {
       usuario : localStorage.getItem('username')
 
     }));    
-    console.log("pedidosActualizados", pedidosActualizados)
+    
     pedidosActualizados.forEach(pedido => {
       axios.put(`https://vivosis.vercel.app/api/pedido/${pedido._id}`, pedido)
         .then(response => {

@@ -153,7 +153,7 @@ function CrearIngreso() {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        
         setMensaje('¡Ingreso creado con éxito!');
         setMensajeError(false);
         setMostrarMensaje(true);
