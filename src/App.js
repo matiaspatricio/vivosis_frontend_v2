@@ -285,21 +285,7 @@ function App() {
                   <VisibilityIcon />
                 </ListItemIcon>
                 <ListItemText primary="HISTORICO (PEDIDOS)" />
-              </ListItem>
-
-              <ListItem
-                button
-                component={Link}
-                to="/actualizamasivapedidos"
-                onClick={handleDrawerClose}
-                style={{ paddingLeft: 32 }}
-              >
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="ACTUALIZAR PEDIDOS DE CLIENTES" />
-              </ListItem>
-
+              </ListItem>              
               
             </List>
           </Collapse>
@@ -331,10 +317,7 @@ function App() {
         <Route path="/crearproducto/" element={<PrivateRoute element={<CrearProducto />} />} />
         <Route path="/crearingreso/" element={<PrivateRoute element={<CrearIngreso />} />} />
         <Route path="/crearpedido/" element={<PrivateRoute element={<CrearPedido />} />} />
-        <Route
-          path="/actualizamasivapedidos/"
-          element={<PrivateRoute element={<ActualizaMasivaPedidos />} />}
-        />
+        
         <Route path="/enviosclientes/" element={<PrivateRoute element={<EnviosClientes />} />} />
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} />
         <Route path="/register" element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}

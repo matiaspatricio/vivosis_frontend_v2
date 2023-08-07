@@ -97,8 +97,6 @@ function VerPedidos() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedVisibleRows, setSelectedVisibleRows] = useState([]);
   const [selectedFechaEntrega, setSelectedFechaEntrega] = useState(null);
-  const [selectionModel, setSelectionModel] = useState([]);      
-  const [selectedPedidoIds, setSelectedPedidoIds] = useState([]);
   const [dialogAction, setDialogAction] = useState('');
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -461,31 +459,7 @@ function VerPedidos() {
         filterable: false,
         hideable: false,
         manageable: false,
-      },
-      {
-        field: 'total',
-        headerName: 'Total',
-        flex: 0.2,
-        footerName: 'Total:',
-        renderCell: (params) => {
-          return params.value.toFixed(2);
-        },
-        renderFooter: () => {
-          return sumTotal.toFixed(2);
-        },
-      },
-      {
-        field: 'cantidad',
-        headerName: 'Cantidad',
-        flex: 0.4,
-        footerName: 'Suma:',
-        renderCell: (params) => {
-          return params.value;
-        },
-        renderFooter: () => {
-          return sumCantidad;
-        },
-      },
+      }
     ];
     
   const handleDelete = id => {
