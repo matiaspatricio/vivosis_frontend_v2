@@ -17,6 +17,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import { getPuntosEntrega } from './api/puntoEntrega/puntoEntrega';
+import { listaEstados } from './api/cliente/cliente';
 
 
 
@@ -28,38 +30,25 @@ function ModificarCliente() {
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
   const [direccion, setDireccion] = useState('');
-  const [localidad, setLocalidad] = useState('');
+  const [puntoEntrega, setPuntoEntrega] = useState('');
+  const [email, setEmail] = useState('');
+  const [comentarios, setComentarios] = useState('');  
   const [estado, setEstado] = useState('');
+  const [origen, setOrigen] = useState('');
+
   const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
-  const [guardarHabilitado, setGuardarHabilitado] = useState(true);  
-  const [openDialog, setOpenDialog] = useState(false);
-  const [localidadDialog, setLocalidadDialog] = useState('');
-  const [localidadesDialog, setLocalidadesDialog] = useState([]);
+  const [guardarHabilitado, setGuardarHabilitado] = useState(true);    
+  const [listaPuntosEntrega, setListaPuntosEntrega] = useState();
   
   
   
 
-  
-  const listaLocalidades = [
-    { value: 'AVELLANEDA', label: 'AVELLANEDA' },
-    { value: 'BERAZATEGUI', label: 'BERAZATEGUI' },
-    { value: 'CRUCE VARELA', label: 'CRUCE VARELA' },
-    { value: 'ENVIO CORREO', label: 'ENVIO CORREO' },
-    { value: 'ENVIO MENSAJERIA', label: 'ENVIO MENSAJERIA' },
-    { value: 'EZPELETA', label: 'EZPELETA' },
-    { value: 'LANUS', label: 'LANUS' },
-    { value: 'LOMAS', label: 'LOMAS' },
-    { value: 'QUILMES', label: 'QUILMES' },
-    { value: 'RETIRO EN DOMICILIO', label: 'RETIRO EN DOMICILIO' },
-    { value: 'SOLANO', label: 'SOLANO' },
-    { value: 'VARELA', label: 'VARELA' }
-  ];
 
 
   useEffect(() => {
-    fetch(`https://vivosis.vercel.app/api/cliente/${id}`)
+    fetch(`https://vivosis-back-v2.vercel.app/api/cliente/${id}`)
       .then(response => response.json())
       .then(data => {
         setCliente(data);
@@ -68,82 +57,56 @@ function ModificarCliente() {
       .catch(error => {
         console.log('Error al cargar el cliente:', error);
       });
+
+      const fetchPuntosEntrega = async () => {
+        const listaPuntosEntrega = await getPuntosEntrega();        
+        setListaPuntosEntrega(listaPuntosEntrega);           
+      }       
+      fetchPuntosEntrega();
+      
+
   }, [id]);
 
   useEffect(() => {
     setNombre(cliente.nombre || '');
     setTelefono(cliente.telefono || '');
     setDireccion(cliente.direccion || '');
-    setLocalidad(cliente.localidad || '');
-    setEstado(cliente.estado || '');    
-    setLocalidadesDialog(listaLocalidades);
+    setPuntoEntrega(cliente.punto_entrega || '');
+    setEmail(cliente.email || '');
+    setEstado(cliente.estado || '');   
+    setComentarios(cliente.comentarios || '');
+    setOrigen(cliente.origen || '');     
   }, [cliente]);
-
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleLocalidadDialogChange = event => {
-    const selectedCategoria = event.target.value;
-    setLocalidadDialog(selectedCategoria);    
-  };
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
 
   const handleNombreChange = event => {
     setNombre(event.target.value);
   };
-
   const handleTelefonoChange = event => {
     setTelefono(event.target.value);
-  };
-  const handleCloseDialogCancel = () => {
-    setOpenDialog(false);
-  };
-  
-  const handleCloseDialogSave = () => {
-    setOpenDialog(false);
-    setLocalidad(localidadDialog);
-/*    const selectedLocalidadObj = localidadesDialog.find(c => c._id === localidadDialog);
-    if (selectedLocalidadObj) {      
-      setLocalidad(selectedLocalidadObj.nombre);
-      
-      
-    }
-    */
-    
-    
-    
-  };
-
+  };    
   const handleDireccionChange = event => {
     setDireccion(event.target.value);
   };
-
-  const handleLocalidadChange = event => {
-    setLocalidad(event.target.value);
-  };
-
   const handleEstadoChange = event => {
     setEstado(event.target.value);
   };
-
-
-
-  const handleGuardar = () => {
+  const handlePuntoEntregaChange = event => {
+    setPuntoEntrega(event.target.value);
+  };
+  const handleGuardar = () => {    
     setGuardarHabilitado(false);
     const clienteModificado = {
       ...cliente,
       nombre,
       telefono,
       direccion,
-      localidad,
+      punto_entrega: puntoEntrega,
+      email,
       estado,
-      usuario
+      comentarios,
+      origen
     };
-    fetch(`https://vivosis.vercel.app/api/cliente/${id}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/cliente/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -154,6 +117,7 @@ function ModificarCliente() {
       .then(data => {
         
         setMensaje('El cliente ha sido actualizado');
+        console.log("clienteModificado", clienteModificado)
         setMostrarMensaje(true);
         
         setTimeout(() => {
@@ -207,17 +171,24 @@ function ModificarCliente() {
               variant="outlined"
               margin="dense"
             />
-            <br />
-            
-            <TextField
-              label="Localidad"
-              value={localidad}
-              onChange={handleLocalidadChange}
-              variant="outlined"
-              margin="dense"
-              onClick={handleOpenDialog}
-            />
-            <br />
+            <br /> 
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="punto_entrega-label" >Punto de Entrega</InputLabel>
+              <Select
+                labelId="punto_entrega-label"
+                value={puntoEntrega}
+                onChange={handlePuntoEntregaChange}
+                label="Punto de Entrega"
+              >
+                {listaPuntosEntrega && listaPuntosEntrega.map(puntoEntrega => (
+                  <MenuItem key={puntoEntrega.id} value={puntoEntrega.id}>
+                    {puntoEntrega.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />                      
             <FormControl variant="outlined" margin="dense" fullWidth>
               <InputLabel id="estado-label" >Estado</InputLabel>
               <Select 
@@ -227,8 +198,11 @@ function ModificarCliente() {
                 onChange={handleEstadoChange}
                 label="Estado"
               >
-                <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                <MenuItem value="BLOQUEADO">BLOQUEADO</MenuItem>
+                {listaEstados && listaEstados.map(estado => (
+                  <MenuItem key={estado.id} value={estado.id}>
+                    {estado.nombre}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <br />
@@ -248,35 +222,7 @@ function ModificarCliente() {
           </Box>
         </CardActions>
       </Card>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Seleccionar localidad</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            select
-            label="Localidad"
-            value={localidadDialog}
-            onChange={handleLocalidadDialogChange}
-            variant="outlined"
-            margin="dense"
-          >
-            {localidadesDialog.map(localidad => (
-              <MenuItem key={localidad.value} value={localidad.value}>
-                {localidad.label}
-              </MenuItem>
-            ))}
-          </TextField>                    
-          <br />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialogCancel} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleCloseDialogSave} color="primary">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      
       <Snackbar
         open={mostrarMensaje}
         autoHideDuration={3000}

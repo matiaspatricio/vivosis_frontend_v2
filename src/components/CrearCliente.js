@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -6,36 +6,43 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Box from '@mui/material/Box';
-import Autocomplete from '@mui/material/Autocomplete';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { getPuntosEntrega  } from './api/puntoEntrega/puntoEntrega';
+import { listaEstados, listaOrigenes } from './api/cliente/cliente';
 
-function CrearCliente() {
-  const listaLocalidades = [
-    { value: 'AVELLANEDA', label: 'AVELLANEDA' },
-    { value: 'BERAZATEGUI', label: 'BERAZATEGUI' },
-    { value: 'CRUCE VARELA', label: 'CRUCE VARELA' },
-    { value: 'ENVIO CORREO', label: 'ENVIO CORREO' },
-    { value: 'ENVIO MENSAJERIA', label: 'ENVIO MENSAJERIA' },
-    { value: 'EZPELETA', label: 'EZPELETA' },
-    { value: 'LANUS', label: 'LANUS' },
-    { value: 'LOMAS', label: 'LOMAS' },
-    { value: 'QUILMES', label: 'QUILMES' },
-    { value: 'RETIRO EN DOMICILIO', label: 'RETIRO EN DOMICILIO' },
-    { value: 'SOLANO', label: 'SOLANO' },
-    { value: 'VARELA', label: 'VARELA' }
-  ];
+function CrearCliente() {  
 
   const navigate = useNavigate();
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [direccion, setDireccion] = useState('');
-  const [localidad, setLocalidad] = useState('');
-  const [estado, setEstado] = useState('ACTIVO');
+  const [direccion, setDireccion] = useState('');  
+  const [puntoEntrega, setPuntoEntrega] = useState('');
+  const [email, setEmail] = useState('');
+  const [comentarios, setComentarios] = useState('');  
+  const [estado, setEstado] = useState('');
+  const [origen, setOrigen] = useState('');
   const [usuario, setUsuario] = useState(localStorage.getItem('username'));
+
   const [mensaje, setMensaje] = useState('');
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
+  
+  const [listaPuntosEntrega, setListaPuntosEntrega] = useState([]);
+
+  useEffect(() => {
+
+    const fetchPuntosEntrega = async () => {
+      const listaPuntosEntrega = await getPuntosEntrega();        
+      setListaPuntosEntrega(listaPuntosEntrega);         
+    }       
+    fetchPuntosEntrega();
+
+  }, []);
 
   const handleNombreChange = (event) => {
     setNombre(event.target.value);
@@ -49,12 +56,21 @@ function CrearCliente() {
     setDireccion(event.target.value);
   };
 
-  const handleLocalidadChange = (event, newValue) => {
-    setLocalidad(newValue.value);
-  };
 
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
   const handleEstadoChange = (event) => {
     setEstado(event.target.value);
+  };
+  const handlePuntoEntregaChange = event => {
+    setPuntoEntrega(event.target.value);
+  };
+  const handleComentariosChange = event => {
+    setComentarios(event.target.value);
+  };
+  const handleOrigenChange = event => {
+    setOrigen(event.target.value);
   };
 
 
@@ -62,9 +78,11 @@ function CrearCliente() {
     setNombre('');
     setTelefono('');
     setDireccion('');
-    setLocalidad('');
-    setEstado('ACTIVO');
-    
+    setPuntoEntrega('');
+    setEmail('');       
+    setEstado('');
+    setComentarios('');
+    setOrigen('');        
   };
 
   const handleGuardar = () => {
@@ -79,11 +97,14 @@ function CrearCliente() {
       nombre,
       telefono,
       direccion,
-      localidad,
+      punto_entrega : puntoEntrega,
+      email,
       estado,
-      usuario
+      comentarios,
+      origen
     };
-    fetch('https://vivosis.vercel.app/api/cliente/', {
+    console.log('nuevoCliente:', nuevoCliente)
+    fetch('https://vivosis-back-v2.vercel.app/api/cliente/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -151,33 +172,79 @@ function CrearCliente() {
               variant="outlined"
               margin="dense"
             />
-            <br />
-            <Autocomplete
-                disableClearable={true}
-              fullWidth                                          
-              onChange={handleLocalidadChange}
-              options={listaLocalidades}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Localidad"
-                  variant="outlined"
-                  margin="dense"
-                />
-              )}
-            />
-            <br />
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="punto_entrega-label" >Punto de Entrega</InputLabel>
+              <Select
+                labelId="punto_entrega-label"
+                value={puntoEntrega}
+                onChange={handlePuntoEntregaChange}
+                label="Punto de Entrega"
+              >
+                {listaPuntosEntrega && listaPuntosEntrega.map(puntoEntrega => (
+                  <MenuItem key={puntoEntrega.id} value={puntoEntrega.id}>
+                    {puntoEntrega.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />                  
             <TextField
               fullWidth 
-              label="Estado"
-              value={estado}
-              onChange={handleEstadoChange}
+              label="Email"
+              value={email}
+              onChange={handleEmailChange}
               variant="outlined"
               margin="dense"
-              disabled
+              
+            />            
+
+            <br />
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="estado-label" >Estado</InputLabel>
+              <Select
+                labelId="estado-label"
+                value={estado}
+                onChange={handleEstadoChange}
+                label="Estado"
+              >
+                {listaEstados && listaEstados.map(estado => (
+                  <MenuItem key={estado.id} value={estado.id}>
+                    {estado.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />        
+
+            <TextField
+              fullWidth 
+              label="Comentarios"
+              value={comentarios}
+              onChange={handleComentariosChange}
+              variant="outlined"
+              margin="dense"
+              
             />
-            <br />            
+            <br />
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="origen-label" >Origen</InputLabel>
+              <Select
+                labelId="origen-label"
+                value={origen}
+                onChange={handleOrigenChange}
+                label="Origen"
+              >
+                {listaOrigenes && listaOrigenes.map(origen => (
+                  <MenuItem key={origen.id} value={origen.id}>
+                    {origen.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />              
           </form>
         </CardContent>
         <CardActions>

@@ -30,7 +30,7 @@ function ModificarIngreso() {
   const [guardarHabilitado, setGuardarHabilitado] = useState(true);
 
   useEffect(() => {
-    fetch(`https://vivosis.vercel.app/api/ingreso/${id}`)
+    fetch(`https://vivosis-back-v2.vercel.app/api/ingreso/${id}`)
       .then(response => response.json())
       .then(data => {
         setIngreso(data);
@@ -53,7 +53,7 @@ function ModificarIngreso() {
   }, [ingreso]);
 
   useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/producto/getallproductos')
+    fetch('https://vivosis-back-v2.vercel.app/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
         setProductos(data);
@@ -127,7 +127,7 @@ function ModificarIngreso() {
       stock: cantidad,
     };
 
-    fetch(`https://vivosis.vercel.app/api/ingreso/${id}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/ingreso/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ function ModificarIngreso() {
         setMensaje('El ingreso ha sido actualizado');
         setMostrarMensaje(true);
 
-        fetch(`https://vivosis.vercel.app/api/producto/${idArticulo}`, {
+        fetch(`https://vivosis-back-v2.vercel.app/api/producto/${idArticulo}`, {
           method: 'GET',
         })
           .then(response => response.json())
@@ -153,7 +153,7 @@ function ModificarIngreso() {
             producto.precio = precioVentaFloat;
             producto.fecha_costo = fechaIngreso;
 
-            fetch(`https://vivosis.vercel.app/api/producto/${idArticulo}`, {
+            fetch(`https://vivosis-back-v2.vercel.app/api/producto/${idArticulo}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'

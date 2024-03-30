@@ -1,4 +1,4 @@
-const API_URL = "https://vivosis.vercel.app/api/pedido";
+const API_URL = "https://vivosis-back-v2.vercel.app/api/pedido";
 
 export const getPedidosPendientes = async () => {
   const response = await fetch(`${API_URL}/getpedidospendientes`);
@@ -43,7 +43,7 @@ export const getPedidosAyer = async () => {
   export const actualizarPedido = async (pedido) => {
     try {
       //console.log('Pedido a actualizar:', pedido);
-      const response = await fetch(`https://vivosis.vercel.app/api/pedido/${pedido._id}`, {
+      const response = await fetch(`https://vivosis-back-v2.vercel.app/api/pedido/${pedido._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -51,7 +51,7 @@ function VerIngresos() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/ingreso/getallingresos')
+    fetch('https://vivosis-back-v2.vercel.app/api/ingreso/getallingresos')
       .then(response => response.json())
       .then(data => {
         const ingresosConId = data.map(ingreso => ({
@@ -81,7 +81,7 @@ function VerIngresos() {
 
   const confirmDelete = () => {
     setConfirmDialogOpen(false);
-    fetch(`https://vivosis.vercel.app/api/ingreso/${selectedIngreso}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/ingreso/${selectedIngreso}`, {
       method: 'DELETE'
     })
       .then(response => response.json())

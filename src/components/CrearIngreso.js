@@ -31,7 +31,7 @@ function CrearIngreso() {
   const [mensajeError, setMensajeError] = useState(false);
 
   useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/producto/getallproductos')
+    fetch('https://vivosis-back-v2.vercel.app/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
         setProductos(data);
@@ -144,7 +144,7 @@ function CrearIngreso() {
       usuario: usuario
 
     };
-    fetch('https://vivosis.vercel.app/api/ingreso/', {
+    fetch('https://vivosis-back-v2.vercel.app/api/ingreso/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -160,7 +160,7 @@ function CrearIngreso() {
         limpiarFormulario();
 
         // Actualizar el producto con el costo, precio y fecha de último ingreso
-        fetch(`https://vivosis.vercel.app/api/producto/${idArticulo}`, {
+        fetch(`https://vivosis-back-v2.vercel.app/api/producto/${idArticulo}`, {
           method: 'GET',
         })
           .then(response => response.json())
@@ -176,7 +176,7 @@ function CrearIngreso() {
             producto.fecha_costo = fechaIngreso;
 
             // Enviar la solicitud para actualizar el producto
-            fetch(`https://vivosis.vercel.app/api/producto/${idArticulo}`, {
+            fetch(`https://vivosis-back-v2.vercel.app/api/producto/${idArticulo}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'

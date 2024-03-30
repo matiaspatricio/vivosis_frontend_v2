@@ -55,20 +55,31 @@ const Dashboard = () => {
     });
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));
+  }, [pedidosHoy]);*/
+  useEffect(() => {
+    if (Array.isArray(pedidosHoy)) {
+      setTotalHoy(pedidosHoy.reduce((total, pedido) => total + pedido.total, 0));
+    }
   }, [pedidosHoy]);
 
   useEffect(() => {
+    if (Array.isArray(pedidosAyer)) {
     setTotalAyer(pedidosAyer.reduce((total, pedido) => total + pedido.total, 0));
+    }
   }, [pedidosAyer]);
 
   useEffect(() => {
+    if (Array.isArray(pedidosSemana)) {
     setTotalSemana(pedidosSemana.reduce((total, pedido) => total + pedido.total, 0));
+    }
   }, [pedidosSemana]);
 
   useEffect(() => {
+    if (Array.isArray(pedidosSemanaAnterior)) {
     setTotalSemanaAnterior(pedidosSemanaAnterior.reduce((total, pedido) => total + pedido.total, 0));
+    }
   }, [pedidosSemanaAnterior]);
 
   return (

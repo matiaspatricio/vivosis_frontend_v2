@@ -81,7 +81,7 @@ function EnviosClientes() {
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const response = await axios.get('https://vivosis.vercel.app/api/pedido/getpedidospendientes');
+        const response = await axios.get('https://vivosis-back-v2.vercel.app/api/pedido/getpedidospendientes');
         const data = response.data;
         setPedidos(data);
         setLoading(false);
@@ -95,7 +95,7 @@ function EnviosClientes() {
 
     const fetchClientes = async () => {
       try {
-        const response = await axios.get('https://vivosis.vercel.app/api/cliente/getallclientes');
+        const response = await axios.get('https://vivosis-back-v2.vercel.app/api/cliente/getallclientes');
         const data = response.data;
         setClientes(data);
       } catch (error) {

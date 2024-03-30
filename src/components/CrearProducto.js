@@ -6,9 +6,16 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { listaEstados } from './api/cliente/cliente';
+import { getCategorias } from './api/categoria/categoria';
+import { getSubcategoriasByIdCategoria } from './api/subcategoria/subcategoria';
+
 
 function CrearProducto() {
   const navigate = useNavigate();
@@ -21,21 +28,29 @@ function CrearProducto() {
   const [comentarios, setComentarios] = useState('');
   const [usuario, setUsuario] = useState(localStorage.getItem('username'));
   const [mensaje, setMensaje] = useState('');
-  const [categorias, setCategorias] = useState([]);
-  const [subcategorias, setSubcategorias] = useState([]);
+  
+  
   const [mostrarMensaje, setMostrarMensaje] = useState(false);
   const [mensajeError, setMensajeError] = useState(false);
+  const [listaCategorias, setListaCategorias] = useState([]);
+  const [listaSubcategorias, setListaSubcategorias] = useState([]);
 
-  useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/categoria/getallcategorias')
-      .then(response => response.json())
-      .then(data => {
-        setCategorias(data);
-      })
-      .catch(error => {
-        console.log('Error al obtener las categorías:', error);
-      });
+  useEffect(() => {    
+      
+      //fetchSubcategorias();      
+      fetchCategorias();  
+
+
   }, []);
+
+  const fetchCategorias = async () => {
+    const listaCategorias = await getCategorias();
+    setListaCategorias(listaCategorias);
+  };
+  const fetchSubcategorias = async (categoriaId) => {
+    const listaSubcategorias = await getSubcategoriasByIdCategoria(categoriaId);
+    setListaSubcategorias(listaSubcategorias);
+  };
 
   const handleNombreChange = event => {
     setNombre(event.target.value);
@@ -44,11 +59,10 @@ function CrearProducto() {
   const handleCategoriaChange = event => {
     const selectedCategoria = event.target.value;
     setCategoria(selectedCategoria);
+    console.log('selectedCategoria:', selectedCategoria)
+    fetchSubcategorias(selectedCategoria);
+    
 
-    const selectedCategoriaObj = categorias.find(c => c._id === selectedCategoria);
-    if (selectedCategoriaObj) {
-      setSubcategorias(selectedCategoriaObj.subcategorias);
-    }
   };
 
   const handleSubcategoriaChange = event => {
@@ -103,22 +117,23 @@ function CrearProducto() {
     }
 
       // Obtener los nombres de la categoría y subcategoría seleccionadas
-      const categoriaSeleccionada = categorias.find(c => c._id === categoria);
-      const subcategoriaSeleccionada = subcategorias.find(s => s._id === subcategoria);
+      const categoriaSeleccionada = listaCategorias.find(c => c._id === categoria);
+      const subcategoriaSeleccionada = listaSubcategorias.find(s => s._id === subcategoria);
       const nombreCategoria = categoriaSeleccionada ? categoriaSeleccionada.nombre : '';
       const nombreSubcategoria = subcategoriaSeleccionada ? subcategoriaSeleccionada.nombre : '';
 
       const nuevoProducto = {
         nombre,
-        categoria: nombreCategoria,
-        subcategoria: nombreSubcategoria,
-        precio,
+        categoria: categoria,
+        subcategoria: subcategoria,
         costo,
+        precio,        
         stock,
-        comentarios,
-        usuario
+        comentarios        
 };
-    fetch('https://vivosis.vercel.app/api/producto/', {
+  console.log('nuevoProducto:', nuevoProducto)
+  
+    fetch('https://vivosis-back-v2.vercel.app/api/producto/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -160,37 +175,50 @@ function CrearProducto() {
               margin="dense"
             />
             <br />
+
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="categoria-label" >Categoria</InputLabel>
+              <Select
+                labelId="categoria-label"
+                value={categoria}
+                onChange={handleCategoriaChange}
+                label="Categoria"
+              >
+                {listaCategorias && listaCategorias.map(categoria => (
+                  <MenuItem key={categoria.id} value={categoria.id}>
+                    {categoria.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />    
+
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="subcategoria-label" >Subcategoria</InputLabel>
+              <Select
+                labelId="subcategoria-label"
+                value={subcategoria}
+                onChange={handleSubcategoriaChange}
+                label="Subcategoria"
+              >
+                {listaSubcategorias && listaSubcategorias.map(subcategoria => (
+                  <MenuItem key={subcategoria.id} value={subcategoria.id}>
+                    {subcategoria.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br /> 
             <TextField
               fullWidth
-              label="Categoría"
-              value={categoria}
-              onChange={handleCategoriaChange}
+              label="Costo"
+              value={costo}
+              onChange={handleCostoChange}
               variant="outlined"
               margin="dense"
-              select
-            >
-              {categorias.map(c => (
-                <MenuItem key={c._id} value={c._id}>
-                  {c.nombre}
-                </MenuItem>
-              ))}
-            </TextField>
-            <br />
-            <TextField
-              fullWidth
-              label="Subcategoría"
-              value={subcategoria}
-              onChange={handleSubcategoriaChange}
-              variant="outlined"
-              margin="dense"
-              select
-            >
-              {subcategorias.map(s => (
-                <MenuItem key={s._id} value={s._id}>
-                  {s.nombre}
-                </MenuItem>
-              ))}
-            </TextField>
+            />
             <br />
             <TextField
               fullWidth
@@ -201,15 +229,7 @@ function CrearProducto() {
               margin="dense"
             />
             <br />
-            <TextField
-              fullWidth
-              label="Costo"
-              value={costo}
-              onChange={handleCostoChange}
-              variant="outlined"
-              margin="dense"
-            />
-            <br />
+            
             <TextField
               fullWidth
               label="Stock"

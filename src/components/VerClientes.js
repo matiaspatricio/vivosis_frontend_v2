@@ -18,6 +18,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Box } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
+import { getPuntosEntrega } from './api/puntoEntrega/puntoEntrega';
+import { listaEstados } from './api/cliente/cliente';
 
 const useStyles = makeStyles({
   root: {
@@ -57,13 +59,14 @@ function VerClientes() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [listaPuntosEntrega, setListaPuntosEntrega] = useState([]);
 
   useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/cliente/getallclientes')
+    fetch('https://vivosis-back-v2.vercel.app/api/cliente/getallclientes')
       .then(response => response.json())
-      .then(data => {
+      .then(data => {        
         const clientesConId = data.map(cliente => ({
-          id: cliente._id,
+          id: cliente.id,
           ...cliente
         }));
         setClientes(clientesConId);
@@ -73,6 +76,13 @@ function VerClientes() {
         console.log('Error al cargar los clientes:', error);
         setLoading(false);
       });
+
+      const fetchPuntosEntrega = async () => {
+        const listaPuntosEntrega = await getPuntosEntrega();        
+        setListaPuntosEntrega(listaPuntosEntrega);  
+        
+      }       
+      fetchPuntosEntrega();
   }, [refreshCount]);
 
   const handleEdit = id => {
@@ -87,7 +97,7 @@ function VerClientes() {
 
   const confirmDelete = () => {
     setConfirmDialogOpen(false);
-    fetch(`https://vivosis.vercel.app/api/cliente/${selectedClient}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/cliente/${selectedClient}`, {
       method: 'DELETE'
     })
       .then(response => response.json())
@@ -120,9 +130,19 @@ function VerClientes() {
     { field: 'nombre', headerName: 'Nombre', flex: 1 },
     { field: 'telefono', headerName: 'Teléfono', flex: 1 },
     { field: 'direccion', headerName: 'Dirección', flex: 1 },
-    { field: 'localidad', headerName: 'Localidad', flex: 1 },
-    { field: 'estado', headerName: 'Estado', flex: 1 },
-    { field: 'usuario', headerName: 'Usuario', flex: 1 },
+    { field: 'punto_entrega', headerName: 'P. Entrega', flex: 1,  valueGetter: params => {
+      const puntoEntregaId = params.row.punto_entrega;
+      const puntoEntrega = listaPuntosEntrega.find(punto => punto.id === puntoEntregaId);
+      return puntoEntrega ? puntoEntrega.nombre : ''; // Si se encuentra el punto de entrega, devuelve su nombre, de lo contrario devuelve una cadena vacía
+    }, },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'estado', headerName: 'Estado', flex: 1, valueGetter: params => {
+      const estadoId = params.row.estado;
+      const estado = listaEstados.find(estado => estado.id === estadoId);
+      return estado ? estado.nombre : ''; // Si se encuentra el estado, devuelve su nombre, de lo contrario devuelve una cadena vacía
+     },},
+    { field: 'comentarios', headerName: 'Comentarios', flex: 1 },            
+    { field: 'origen', headerName: 'Origen', flex: 1 }, 
     {
       field: 'actions',
       headerName: 'Acciones',
@@ -155,9 +175,7 @@ function VerClientes() {
             <Button variant="contained" color="primary" onClick={handleCrearCliente} size="large" endIcon={<CreateIcon />} >
             Crear Cliente
           </Button>
-        </Box>   
-
-               
+        </Box>               
           <br/><br/><br/>
           <TextField
             label="Buscar"

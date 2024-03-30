@@ -165,14 +165,14 @@ function VerPedidosHistorico() {
   }, [pedidos]);
 
   const actualizarStockProducto = (productId, quantity) => {
-    fetch(`https://vivosis.vercel.app/api/producto/${productId}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/producto/${productId}`, {
       method: 'GET',
     })
       .then(response => response.json())
       .then(producto => {
         producto.stock += quantity;
 
-        fetch(`https://vivosis.vercel.app/api/producto/${productId}`, {
+        fetch(`https://vivosis-back-v2.vercel.app/api/producto/${productId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -301,7 +301,7 @@ function VerPedidosHistorico() {
     const pedidoAEliminar = pedidos.find(pedido => pedido.id === selectedPedido);
     //console.log('PedidoAEliminar: ', pedidoAEliminar);
     actualizarStockProducto(pedidoAEliminar.id_articulo, pedidoAEliminar.cantidad);
-    fetch(`https://vivosis.vercel.app/api/pedido/${selectedPedido}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/pedido/${selectedPedido}`, {
       method: 'DELETE',
     })
       .then(response => response.json())

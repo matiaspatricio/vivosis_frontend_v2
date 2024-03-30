@@ -18,6 +18,9 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Box } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
+import { listaEstados } from './api/cliente/cliente';
+import { getCategorias } from './api/categoria/categoria';
+import { getSubcategorias } from './api/subcategoria/subcategoria';
 
 const useStyles = makeStyles({
   root: {
@@ -49,16 +52,17 @@ function VerProductos() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [listaCategorias, setListaCategorias] = useState([]);
+  const [listaSubcategorias, setListaSubcategorias] = useState([]);
 
   useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/producto/getallproductos')
+    fetch('https://vivosis-back-v2.vercel.app/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
         const productosConId = data.map(producto => ({          
           id: producto._id,
           ...producto
-        }));
-        console.log("Productos obtenidos", productosConId)
+        }));        
         setProductos(productosConId);
         setLoading(false);
       })
@@ -66,6 +70,16 @@ function VerProductos() {
         console.log('Error al cargar los productos:', error);
         setLoading(false);
       });
+      const fetchCategorias = async () => {
+        const listaCategorias = await getCategorias();
+        setListaCategorias(listaCategorias);
+      };
+      const fetchSubcategorias = async () => {
+        const listaSubcategorias = await getSubcategorias();
+        setListaSubcategorias(listaSubcategorias);
+      };
+      fetchSubcategorias();      
+      fetchCategorias();      
   }, [refreshCount]);
 
   const handleEdit = id => {
@@ -76,7 +90,7 @@ function VerProductos() {
 
   const confirmDelete = id => {
     setConfirmDialogOpen(false);
-    fetch(`https://vivosis.vercel.app/api/producto/${selectedProduct}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/producto/${selectedProduct}`, {
       method: 'DELETE'
     })
       .then(response => response.json())
@@ -110,14 +124,28 @@ function VerProductos() {
 
   const columns = [
     { field: 'nombre', headerName: 'Nombre', flex: 1 },
-    { field: 'categoria', headerName: 'Categoría', flex: 0.8 },
-    { field: 'subcategoria', headerName: 'Subcategoría', flex: 1 },
-    { field: 'precio', headerName: 'Precio', flex: 0.5 },
+    { field: 'categoria', headerName: 'Categoría', flex: 0.8, valueGetter: params => {
+      const categoriaId = params.row.categoria;
+      const categoria = listaCategorias.find(categoria => categoria.id === categoriaId);
+      return categoria ? categoria.nombre : ''; // Si se encuentra la categoria, devuelve su nombre, de lo contrario devuelve una cadena vacía
+
+     },},
+    { field: 'subcategoria', headerName: 'Subcategoría', flex: 1, valueGetter: params => {
+      const subcategoriaId = params.row.subcategoria;
+      const subcategoria = listaSubcategorias.find(subcategoria => subcategoria.id === subcategoriaId);
+      return subcategoria ? subcategoria.nombre : ''; // Si se encuentra la subcategoria, devuelve su nombre, de lo contrario devuelve una cadena vacía
+     }, },
     { field: 'costo', headerName: 'Costo', flex: 0.5 },
+    { field: 'precio', headerName: 'Precio', flex: 0.5 },    
     { field: 'stock', headerName: 'Stock', flex: 0.5 },
     { field: 'fecha_costo', headerName: 'Fecha costo', flex: 0.7 },
+    { field: 'estado', headerName: 'Estado', flex: 1, valueGetter: params => {
+      const estadoId = params.row.estado;
+      const estado = listaEstados.find(estado => estado.id === estadoId);
+      return estado ? estado.nombre : ''; // Si se encuentra el estado, devuelve su nombre, de lo contrario devuelve una cadena vacía
+     },},
     { field: 'comentarios', headerName: 'Comentarios', flex: 1 },
-    { field: 'usuario', headerName: 'Usuario', flex: 1 },
+    
     {
       field: 'actions',
       headerName: 'Acciones',

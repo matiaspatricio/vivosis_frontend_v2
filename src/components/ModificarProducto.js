@@ -13,6 +13,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+
+import { listaEstados } from './api/cliente/cliente';
 
 function ModificarProducto() {
   const navigate = useNavigate();
@@ -21,6 +26,7 @@ function ModificarProducto() {
   const [nombre, setNombre] = useState('');
   const [categoria, setCategoria] = useState('');
   const [subcategoria, setSubcategoria] = useState('');
+  const [estado, setEstado] = useState('');
 
   const [categoriaDialog, setCategoriaDialog] = useState('');
   const [subcategoriaDialog, setSubcategoriaDialog] = useState('');
@@ -38,7 +44,7 @@ function ModificarProducto() {
   const [guardarHabilitado, setGuardarHabilitado] = useState(true);
 
   useEffect(() => {
-    fetch(`https://vivosis.vercel.app/api/producto/${id}`)
+    fetch(`https://vivosis-back-v2.vercel.app/api/producto/${id}`)
       .then(response => response.json())
       .then(data => {
         setProducto(data);
@@ -46,7 +52,7 @@ function ModificarProducto() {
       .catch(error => {
         console.log('Error al cargar el producto:', error);
       });
-    fetch('https://vivosis.vercel.app/api/categoria/getallcategorias')
+    fetch('https://vivosis-back-v2.vercel.app/api/categoria/getallcategorias')
       .then(response => response.json())
       .then(data => {
         setCategoriasDialog(data);
@@ -63,6 +69,7 @@ function ModificarProducto() {
     setPrecio(producto.precio || 0);
     setCosto(producto.costo || 0);
     setStock(producto.stock || 0);
+    setEstado(producto.estado || '');
     setComentarios(producto.comentarios || '');
     
   }, [producto]);
@@ -105,13 +112,14 @@ function ModificarProducto() {
       nombre,
       categoria,
       subcategoria,
-      precio,
       costo,
+      precio,      
       stock,
-      comentarios,
-      usuario
+      estado,
+      comentarios
+      
     };
-    fetch(`https://vivosis.vercel.app/api/producto/${id}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/producto/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -144,6 +152,9 @@ function ModificarProducto() {
 
   const handleCloseDialogCancel = () => {
     setOpenDialog(false);
+  };
+  const handleEstadoChange = (event) => {
+    setEstado(event.target.value);
   };
   
   const handleCloseDialogSave = () => {
@@ -189,6 +200,7 @@ function ModificarProducto() {
           <h2>Modificar Producto</h2>
           <form>
             <TextField
+              fullWidth
               label="Nombre"
               value={nombre}
               onChange={handleNombreChange}
@@ -197,6 +209,7 @@ function ModificarProducto() {
             />
             <br />
             <TextField
+              fullWidth
               label="Categoría"
               value={categoria}
               onChange={handleCategoriaChange}
@@ -206,6 +219,7 @@ function ModificarProducto() {
             />
             <br />
             <TextField
+              fullWidth
               label="Subcategoría"
               value={subcategoria}
               onChange={handleSubcategoriaChange}
@@ -215,15 +229,7 @@ function ModificarProducto() {
             />
             <br />
             <TextField
-              label="Precio"
-              type="number"
-              value={precio}
-              onChange={handlePrecioChange}
-              variant="outlined"
-              margin="dense"
-            />
-            <br />
-            <TextField
+              fullWidth
               label="Costo"
               type="number"
               value={costo}
@@ -233,6 +239,18 @@ function ModificarProducto() {
             />
             <br />
             <TextField
+              fullWidth
+              label="Precio"
+              type="number"
+              value={precio}
+              onChange={handlePrecioChange}
+              variant="outlined"
+              margin="dense"
+            />
+            
+            <br />
+            <TextField
+              fullWidth
               label="Stock"
               type="number"
               value={stock}
@@ -240,6 +258,23 @@ function ModificarProducto() {
               variant="outlined"
               margin="dense"
             />
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="estado-label" >Estado</InputLabel>
+              <Select
+                labelId="estado-label"
+                value={estado}
+                onChange={handleEstadoChange}
+                label="Estado"
+              >
+                {listaEstados && listaEstados.map(estado => (
+                  <MenuItem key={estado.id} value={estado.id}>
+                    {estado.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />       
             <br />
             <TextField
               fullWidth

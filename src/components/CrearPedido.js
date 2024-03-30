@@ -62,7 +62,7 @@ function CrearPedido() {
   ];
 
   useEffect(() => {
-    fetch('https://vivosis.vercel.app/api/cliente/getallclientes')
+    fetch('https://vivosis-back-v2.vercel.app/api/cliente/getallclientes')
       .then(response => response.json())
       .then(data => {
         const sortedClientes = data.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -72,7 +72,7 @@ function CrearPedido() {
         console.log('Error al obtener los clientes:', error);
       });
 
-    fetch('https://vivosis.vercel.app/api/producto/getallproductos')
+    fetch('https://vivosis-back-v2.vercel.app/api/producto/getallproductos')
       .then(response => response.json())
       .then(data => {
         setArticulos(data);
@@ -88,7 +88,7 @@ function CrearPedido() {
   }, [cantidad, precio]);
 
   const fetchPrecioProducto = productId => {
-    fetch(`https://vivosis.vercel.app/api/producto/${productId}`)
+    fetch(`https://vivosis-back-v2.vercel.app/api/producto/${productId}`)
       .then(response => response.json())
       .then(data => {
         setPrecio(data.precio);
@@ -199,14 +199,14 @@ function CrearPedido() {
   };
 
   const actualizarStockProducto = (productId, quantity) => {
-    fetch(`https://vivosis.vercel.app/api/producto/${productId}`, {
+    fetch(`https://vivosis-back-v2.vercel.app/api/producto/${productId}`, {
       method: 'GET'
     })
       .then(response => response.json())
       .then(producto => {
         producto.stock -= quantity;
 
-        fetch(`https://vivosis.vercel.app/api/producto/${productId}`, {
+        fetch(`https://vivosis-back-v2.vercel.app/api/producto/${productId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -264,7 +264,7 @@ function CrearPedido() {
 
     
 
-    fetch('https://vivosis.vercel.app/api/pedido/', {
+    fetch('https://vivosis-back-v2.vercel.app/api/pedido/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
