@@ -49,6 +49,7 @@ function CrearProducto() {
   };
   const fetchSubcategorias = async (categoriaId) => {
     const listaSubcategorias = await getSubcategoriasByIdCategoria(categoriaId);
+    console.log(listaSubcategorias)
     setListaSubcategorias(listaSubcategorias);
   };
 

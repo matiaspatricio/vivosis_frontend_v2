@@ -18,7 +18,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { getPuntosEntrega } from './api/puntoEntrega/puntoEntrega';
-import { listaEstados } from './api/cliente/cliente';
+import { listaEstados, listaOrigenes } from './api/cliente/cliente';
 
 
 
@@ -68,6 +68,7 @@ function ModificarCliente() {
   }, [id]);
 
   useEffect(() => {
+    console.log(cliente)
     setNombre(cliente.nombre || '');
     setTelefono(cliente.telefono || '');
     setDireccion(cliente.direccion || '');
@@ -87,12 +88,24 @@ function ModificarCliente() {
   const handleDireccionChange = event => {
     setDireccion(event.target.value);
   };
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
   const handleEstadoChange = event => {
     setEstado(event.target.value);
   };
   const handlePuntoEntregaChange = event => {
     setPuntoEntrega(event.target.value);
   };
+
+  const handleComentariosChange = event => {
+    setComentarios(event.target.value);
+  };
+  const handleOrigenChange = event => {
+    setOrigen(event.target.value);
+  };
+
+
   const handleGuardar = () => {    
     setGuardarHabilitado(false);
     const clienteModificado = {
@@ -189,6 +202,17 @@ function ModificarCliente() {
 
             </FormControl>
             <br />                      
+            <TextField
+              fullWidth 
+              label="Email"
+              value={email}
+              onChange={handleEmailChange}
+              variant="outlined"
+              margin="dense"
+              
+            />            
+
+            <br />
             <FormControl variant="outlined" margin="dense" fullWidth>
               <InputLabel id="estado-label" >Estado</InputLabel>
               <Select 
@@ -206,6 +230,35 @@ function ModificarCliente() {
               </Select>
             </FormControl>
             <br />
+
+                        <TextField
+              fullWidth 
+              label="Comentarios"
+              value={comentarios}
+              onChange={handleComentariosChange}
+              variant="outlined"
+              margin="dense"
+              
+            />
+            <br />
+            <FormControl variant="outlined" margin="dense" fullWidth>
+              <InputLabel id="origen-label" >Origen</InputLabel>
+              <Select
+                labelId="origen-label"
+                value={origen}
+                onChange={handleOrigenChange}
+                label="Origen"
+              >
+                {listaOrigenes && listaOrigenes.map(origen => (
+                  <MenuItem key={origen.id} value={origen.id}>
+                    {origen.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+
+            </FormControl>
+            <br />              
+          
             
           </form>
         </CardContent>
